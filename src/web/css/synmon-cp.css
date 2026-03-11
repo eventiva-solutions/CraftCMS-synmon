@@ -1,0 +1,104 @@
+/* SynMon CP Styles */
+.synmon-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.synmon-status-pass  { background: #d4edda; color: #155724; }
+.synmon-status-fail  { background: #f8d7da; color: #721c24; }
+.synmon-status-error { background: #fff3cd; color: #856404; }
+.synmon-status-running { background: #cce5ff; color: #004085; }
+.synmon-status-skip  { background: #e9ecef; color: #6c757d; }
+
+.synmon-step-row {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: 24px auto 1fr 1fr auto auto auto;
+    gap: 10px;
+    align-items: center;
+}
+.synmon-step-row:hover { border-color: #b0b0b0; }
+
+.synmon-drag-handle {
+    cursor: grab;
+    color: #aaa;
+    font-size: 16px;
+}
+.synmon-drag-handle:active { cursor: grabbing; }
+
+.synmon-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.synmon-stat-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+.synmon-stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+}
+.synmon-stat-label {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.synmon-suite-table th { font-weight: 600; }
+.synmon-suite-table .cron-badge {
+    font-family: monospace;
+    background: #f3f4f6;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.synmon-step-log-row {
+    padding: 8px 12px;
+    border-left: 3px solid transparent;
+    margin-bottom: 4px;
+    border-radius: 0 4px 4px 0;
+}
+.synmon-step-log-row.pass  { border-left-color: #28a745; background: #f0fff4; }
+.synmon-step-log-row.fail  { border-left-color: #dc3545; background: #fff5f5; }
+.synmon-step-log-row.skip  { border-left-color: #adb5bd; background: #f8f9fa; }
+
+.synmon-error-msg {
+    font-family: monospace;
+    font-size: 12px;
+    color: #dc3545;
+    margin-top: 4px;
+}
+
+.synmon-playwright-setup {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.synmon-playwright-setup code {
+    display: block;
+    background: #1e1e1e;
+    color: #9cdcfe;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-top: 8px;
+}

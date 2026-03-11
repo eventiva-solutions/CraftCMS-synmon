@@ -1,0 +1,80 @@
+{% extends '_layouts/cp' %}
+{% do view.registerAssetBundle('eventiva\\synmon\\assetbundles\\SynMonAssetBundle') %}
+
+{% set title = 'SynMon Einstellungen' %}
+{% set selectedSubnavItem = 'settings' %}
+
+{% block content %}
+
+{% if not nodeAvailable %}
+<div class="synmon-playwright-setup">
+    <strong>⚠ Node.js nicht gefunden!</strong>
+    Stelle sicher, dass Node.js installiert ist und der Pfad zur node-Binary korrekt ist.
+</div>
+{% endif %}
+
+{% if nodeAvailable and not pwAvailable %}
+<div class="synmon-playwright-setup">
+    <strong>⚠ Playwright nicht installiert!</strong>
+    Führe folgende Befehle aus:
+    <code>cd {{ craft.app.path.basePath }}/plugins/synmon/src/node
+npm install playwright
+npx playwright install chromium</code>
+</div>
+{% endif %}
+
+{% if nodeAvailable and pwAvailable %}
+<div style="background:#d4edda;border:1px solid #28a745;border-radius:6px;padding:12px;margin-bottom:16px">
+    ✅ Node.js und Playwright sind einsatzbereit.
+</div>
+{% endif %}
+
+<form method="post">
+    {{ csrfInput() }}
+
+    <div class="field">
+        <div class="heading"><label>Node.js Binary</label>
+            <div class="instructions"><p>Pfad zur node-Binary (Standard: <code>node</code>)</p></div>
+        </div>
+        <div class="input"><input type="text" name="nodeBinary" class="text" style="width:300px"
+            value="{{ settings.nodeBinary ?? 'node' }}"></div>
+    </div>
+
+    <div class="field">
+        <div class="heading"><label>Standard Step-Timeout (ms)</label></div>
+        <div class="input"><input type="number" name="defaultTimeout" class="text" style="width:150px"
+            value="{{ settings.defaultTimeout ?? 30000 }}"></div>
+    </div>
+
+    <div class="field">
+        <div class="heading"><label>Globaler Suite-Timeout (Sekunden)</label></div>
+        <div class="input"><input type="number" name="globalTimeout" class="text" style="width:150px"
+            value="{{ settings.globalTimeout ?? 120 }}"></div>
+    </div>
+
+    <div class="field">
+        <div class="heading"><label>Run-Aufbewahrungsdauer (Tage)</label>
+            <div class="instructions"><p>Ältere Runs werden beim nächsten Cron-Lauf gelöscht.</p></div>
+        </div>
+        <div class="input"><input type="number" name="runRetentionDays" class="text" style="width:150px"
+            value="{{ settings.runRetentionDays ?? 30 }}"></div>
+    </div>
+
+    <div class="field">
+        <div class="heading"><label>
+            <input type="checkbox" name="enabled" value="1" {{ settings.enabled ?? true ? 'checked' : '' }}>
+            SynMon global aktiviert
+        </label></div>
+    </div>
+
+    <hr>
+    <h2>Cron-Setup</h2>
+    <p>Füge folgenden Eintrag in deinen Server-Crontab ein (<code>crontab -e</code>):</p>
+    <div class="synmon-playwright-setup" style="background:#f3f4f6;border-color:#d1d5db">
+        <code>* * * * * /usr/bin/php {{ craft.app.request.isConsoleRequest ? '' : '' }}/var/www/craft synmon/run >> /var/log/synmon.log 2>&1</code>
+    </div>
+
+    <button type="submit" formaction="{{ cpUrl('synmon/settings/save') }}" class="btn submit">Einstellungen speichern</button>
+</form>
+
+{% endblock %}

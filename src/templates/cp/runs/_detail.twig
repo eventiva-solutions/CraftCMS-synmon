@@ -1,0 +1,70 @@
+{% extends '_layouts/cp' %}
+{% do view.registerAssetBundle('eventiva\\synmon\\assetbundles\\SynMonAssetBundle') %}
+
+{% set selectedSubnavItem = 'runs' %}
+{% set crumbs = [
+    { label: 'SynMon', url: cpUrl('synmon') },
+    { label: 'Run History', url: cpUrl('synmon/runs') },
+] %}
+
+{% block content %}
+
+<div style="display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap">
+    <div>
+        <strong>Suite:</strong> <a href="{{ cpUrl('synmon/suites/' ~ run.suiteId) }}">{{ run.suiteName }}</a>
+    </div>
+    <div>
+        <strong>Status:</strong>
+        <span class="synmon-status-badge synmon-status-{{ run.status }}">{{ run.status }}</span>
+    </div>
+    <div><strong>Dauer:</strong> {{ run.durationMs ? (run.durationMs / 1000)|round(2) ~ 's' : '—' }}</div>
+    <div><strong>Trigger:</strong> {{ run.trigger }}</div>
+    <div><strong>Node:</strong> {{ run.nodeVersion ?? '—' }}</div>
+    <div><strong>Playwright:</strong> {{ run.playwrightVersion ?? '—' }}</div>
+    <div><strong>Datum:</strong> {{ run.dateCreated|date('d.m.Y H:i:s') }}</div>
+</div>
+
+{% if run.errorMessage %}
+<div class="synmon-playwright-setup" style="background:#f8d7da;border-color:#dc3545">
+    <strong>Fehlermeldung:</strong>
+    <code style="color:#dc3545">{{ run.errorMessage }}</code>
+</div>
+{% endif %}
+
+<h2>Step-für-Schritt Log</h2>
+
+{% if run.stepLogs|length == 0 %}
+<p style="color:#999">Keine Step-Logs vorhanden.</p>
+{% else %}
+{% for log in run.stepLogs %}
+<div class="synmon-step-log-row {{ log.status }}">
+    <div style="display:flex;gap:12px;align-items:center">
+        <span class="synmon-status-badge synmon-status-{{ log.status }}">{{ log.status }}</span>
+        <strong>{{ log.type }}</strong>
+        {% if log.selector %}<code style="font-size:12px">{{ log.selector }}</code>{% endif %}
+        {% if log.value %}<span style="color:#666">→ {{ log.value }}</span>{% endif %}
+        <span style="margin-left:auto;color:#999;font-size:12px">{{ log.durationMs ? log.durationMs ~ 'ms' : '' }}</span>
+    </div>
+    {% if log.errorMessage %}
+    <div class="synmon-error-msg">{{ log.errorMessage }}</div>
+    {% endif %}
+    {% if log.consoleOutput %}
+    <details style="margin-top:6px">
+        <summary style="font-size:12px;color:#666;cursor:pointer">Console Output</summary>
+        <pre style="font-size:11px;background:#f8f9fa;padding:8px;border-radius:4px;margin-top:4px;white-space:pre-wrap">{{ log.consoleOutput }}</pre>
+    </details>
+    {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+<div style="margin-top:24px">
+    <a href="{{ cpUrl('synmon/runs') }}" class="btn">← Zurück zur Liste</a>
+    <form method="post" style="display:inline" onsubmit="return confirm('Run löschen?')">
+        {{ csrfInput() }}
+        <input type="hidden" name="runId" value="{{ run.id }}">
+        <button type="submit" formaction="{{ cpUrl('synmon/runs/delete') }}" class="btn">Löschen</button>
+    </form>
+</div>
+
+{% endblock %}

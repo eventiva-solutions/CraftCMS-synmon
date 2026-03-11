@@ -1,0 +1,29 @@
+<div class="synmon-step-row" data-step-index="{{ index }}">
+    <span class="synmon-drag-handle" title="Verschieben">⠿</span>
+
+    <select name="steps[{{ index }}][type]" class="select step-type-select" style="min-width:160px">
+        {% for typeKey, typeConfig in stepTypes %}
+            <option value="{{ typeKey }}" {{ step.type == typeKey ? 'selected' : '' }}>{{ typeConfig.label }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="text" name="steps[{{ index }}][selector]" class="text"
+        value="{{ step.selector ?? '' }}"
+        placeholder="CSS-Selector (z.B. #btn)"
+        {{ stepTypes[step.type].hasSelector ?? true ? '' : 'style="display:none"' }}>
+
+    <input type="text" name="steps[{{ index }}][value]" class="text"
+        value="{{ step.value ?? '' }}"
+        placeholder="Wert / URL"
+        {{ stepTypes[step.type].hasValue ?? true ? '' : 'style="display:none"' }}>
+
+    <input type="text" name="steps[{{ index }}][description]" class="text"
+        value="{{ step.description ?? '' }}" placeholder="Beschreibung (optional)" style="min-width:140px">
+
+    <input type="number" name="steps[{{ index }}][timeout]" class="text"
+        value="{{ step.timeout ?? 30000 }}" style="width:90px" placeholder="Timeout ms">
+
+    <input type="hidden" name="steps[{{ index }}][sortOrder]" value="{{ index }}">
+
+    <button type="button" class="btn small btn-remove-step" title="Entfernen">✕</button>
+</div>

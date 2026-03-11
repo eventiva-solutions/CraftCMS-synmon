@@ -1,0 +1,9 @@
+{
+  "name": "synmon-runner",
+  "version": "1.0.0",
+  "description": "Playwright test runner for SynMon",
+  "main": "runner.js",
+  "dependencies": {
+    "playwright": "^1.40.0"
+  }
+}

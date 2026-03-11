@@ -1,0 +1,101 @@
+{% extends '_layouts/cp' %}
+{% import '_includes/forms' as forms %}
+
+{% do view.registerAssetBundle('eventiva\\synmon\\assetbundles\\SynMonAssetBundle') %}
+
+{% set title = 'SynMon Dashboard' %}
+
+{% set selectedSubnavItem = 'dashboard' %}
+{% set crumbs = [{ label: 'SynMon', url: cpUrl('synmon') }] %}
+
+{% block content %}
+
+<div class="synmon-stats-grid">
+    <div class="synmon-stat-card">
+        <div class="synmon-stat-value">{{ stats.totalSuites }}</div>
+        <div class="synmon-stat-label">Test Suites</div>
+    </div>
+    <div class="synmon-stat-card">
+        <div class="synmon-stat-value">{{ stats.totalRuns }}</div>
+        <div class="synmon-stat-label">Gesamt Runs</div>
+    </div>
+    <div class="synmon-stat-card">
+        <div class="synmon-stat-value" style="color:#155724">{{ stats.passRuns }}</div>
+        <div class="synmon-stat-label">Passed</div>
+    </div>
+    <div class="synmon-stat-card">
+        <div class="synmon-stat-value" style="color:#721c24">{{ stats.failRuns }}</div>
+        <div class="synmon-stat-label">Failed</div>
+    </div>
+    <div class="synmon-stat-card">
+        <div class="synmon-stat-value">{{ stats.passRate }}%</div>
+        <div class="synmon-stat-label">Pass Rate</div>
+    </div>
+</div>
+
+<h2>Suite Status</h2>
+<table class="data fullwidth synmon-suite-table">
+    <thead>
+        <tr>
+            <th>Suite</th>
+            <th>Cron</th>
+            <th>Status</th>
+            <th>Letzter Run</th>
+            <th>Aktionen</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for suite in stats.suiteStatuses %}
+        <tr>
+            <td><a href="{{ cpUrl('synmon/suites/' ~ suite.id) }}">{{ suite.name }}</a></td>
+            <td><span class="cron-badge">{{ suite.cronExpression }}</span></td>
+            <td>
+                {% if suite.lastRunStatus %}
+                    <span class="synmon-status-badge synmon-status-{{ suite.lastRunStatus }}">
+                        {{ suite.lastRunStatus }}
+                    </span>
+                {% else %}
+                    <span class="synmon-status-badge synmon-status-skip">—</span>
+                {% endif %}
+            </td>
+            <td>{{ suite.lastRunAt ? suite.lastRunAt|date('d.m.Y H:i') : '—' }}</td>
+            <td>
+                <button class="btn small btn-run-suite" data-suite-id="{{ suite.id }}">▶ Starten</button>
+                <a href="{{ cpUrl('synmon/suites/' ~ suite.id) }}" class="btn small">Bearbeiten</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center;color:#999">Keine Suites vorhanden. <a href="{{ cpUrl('synmon/suites/new') }}">Jetzt erstellen</a></td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if stats.recentRuns|length %}
+<h2 style="margin-top:32px">Letzte Runs</h2>
+<table class="data fullwidth">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Suite</th>
+            <th>Status</th>
+            <th>Dauer</th>
+            <th>Trigger</th>
+            <th>Datum</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for run in stats.recentRuns %}
+        <tr>
+            <td><a href="{{ cpUrl('synmon/runs/' ~ run.id) }}">#{{ run.id }}</a></td>
+            <td>{{ run.suiteName }}</td>
+            <td><span class="synmon-status-badge synmon-status-{{ run.status }}">{{ run.status }}</span></td>
+            <td>{{ run.durationMs ? (run.durationMs / 1000)|round(1) ~ 's' : '—' }}</td>
+            <td>{{ run.trigger }}</td>
+            <td>{{ run.dateCreated|date('d.m.Y H:i') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends '_layouts/cp' %}
+{% do view.registerAssetBundle('eventiva\\synmon\\assetbundles\\SynMonAssetBundle') %}
+
+{% set title = 'Test Suites' %}
+{% set selectedSubnavItem = 'suites' %}
+
+{% set headerActions = [{
+    label: 'Neue Suite',
+    url: cpUrl('synmon/suites/new'),
+}] %}
+
+{% block content %}
+
+{% if suites|length == 0 %}
+<div style="text-align:center;padding:60px 0;color:#999">
+    <p style="font-size:32px">🔬</p>
+    <p>Noch keine Test-Suites vorhanden.</p>
+    <a href="{{ cpUrl('synmon/suites/new') }}" class="btn submit">Erste Suite erstellen</a>
+</div>
+{% else %}
+<table class="data fullwidth synmon-suite-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Cron</th>
+            <th>Status</th>
+            <th>Aktiv</th>
+            <th>Letzter Run</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for suite in suites %}
+        <tr>
+            <td><a href="{{ cpUrl('synmon/suites/' ~ suite.id) }}">{{ suite.name }}</a>
+                {% if suite.description %}<br><small style="color:#999">{{ suite.description }}</small>{% endif %}
+            </td>
+            <td><span class="cron-badge">{{ suite.cronExpression }}</span></td>
+            <td>
+                {% if suite.lastRunStatus %}
+                    <span class="synmon-status-badge synmon-status-{{ suite.lastRunStatus }}">{{ suite.lastRunStatus }}</span>
+                {% else %}
+                    <span style="color:#aaa">—</span>
+                {% endif %}
+            </td>
+            <td>
+                <input type="checkbox" class="suite-toggle" data-suite-id="{{ suite.id }}"
+                    {{ suite.enabled ? 'checked' : '' }}>
+            </td>
+            <td>{{ suite.lastRunAt ? suite.lastRunAt|date('d.m.Y H:i') : '—' }}</td>
+            <td style="text-align:right">
+                <button class="btn small btn-run-suite" data-suite-id="{{ suite.id }}">▶ Starten</button>
+                <a href="{{ cpUrl('synmon/suites/' ~ suite.id) }}" class="btn small">Edit</a>
+                <form method="post" style="display:inline" onsubmit="return confirm('Suite löschen?')">
+                    {{ csrfInput() }}
+                    <input type="hidden" name="suiteId" value="{{ suite.id }}">
+                    <button type="submit" formaction="{{ cpUrl('synmon/suites/delete') }}" class="btn small">Löschen</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

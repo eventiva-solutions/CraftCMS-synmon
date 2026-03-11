@@ -1,0 +1,94 @@
+{% extends '_layouts/cp' %}
+{% do view.registerAssetBundle('eventiva\\synmon\\assetbundles\\SynMonAssetBundle') %}
+{# Load Sortable.js from CDN #}
+{% js 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js' %}
+
+{% set selectedSubnavItem = 'suites' %}
+{% set crumbs = [
+    { label: 'SynMon', url: cpUrl('synmon') },
+    { label: 'Test Suites', url: cpUrl('synmon/suites') },
+] %}
+
+{% block content %}
+
+<form method="post" id="suite-form">
+    {{ csrfInput() }}
+    {% if suite %}<input type="hidden" name="suiteId" value="{{ suite.id }}">{% endif %}
+
+    <div class="flex" style="gap:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:280px">
+            <div class="field">
+                <div class="heading"><label>Name *</label></div>
+                <div class="input"><input type="text" name="name" class="text fullwidth" required
+                    value="{{ suite.name ?? '' }}" placeholder="z.B. Homepage Check"></div>
+            </div>
+            <div class="field">
+                <div class="heading"><label>Beschreibung</label></div>
+                <div class="input"><input type="text" name="description" class="text fullwidth"
+                    value="{{ suite.description ?? '' }}"></div>
+            </div>
+            <div class="field">
+                <div class="heading"><label>Cron Expression</label>
+                    <div class="instructions"><p>z.B. <code>*/5 * * * *</code> = alle 5 Minuten</p></div>
+                </div>
+                <div class="input"><input type="text" name="cronExpression" class="text fullwidth code"
+                    value="{{ suite.cronExpression ?? '*/5 * * * *' }}" placeholder="*/5 * * * *"></div>
+            </div>
+            <div class="field">
+                <div class="heading"><label>
+                    <input type="checkbox" name="enabled" value="1" {{ (suite is null or suite.enabled) ? 'checked' : '' }}>
+                    Aktiv
+                </label></div>
+            </div>
+        </div>
+        <div style="flex:1;min-width:280px">
+            <div class="field">
+                <div class="heading"><label>Benachrichtigung: E-Mail</label></div>
+                <div class="input"><input type="email" name="notifyEmail" class="text fullwidth"
+                    value="{{ suite.notifyEmail ?? '' }}" placeholder="admin@example.com"></div>
+            </div>
+            <div class="field">
+                <div class="heading"><label>Webhook-URL</label></div>
+                <div class="input"><input type="url" name="notifyWebhookUrl" class="text fullwidth"
+                    value="{{ suite.notifyWebhookUrl ?? '' }}" placeholder="https://hooks.slack.com/..."></div>
+            </div>
+            <div class="field">
+                <div class="heading"><label>
+                    <input type="checkbox" name="notifyOnSuccess" value="1"
+                        {{ suite.notifyOnSuccess ?? false ? 'checked' : '' }}>
+                    Auch bei Erfolg benachrichtigen
+                </label></div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>Test Steps</h2>
+
+    <div id="step-list">
+        {% for i, step in steps %}
+            {% include 'synmon/cp/suites/_step-row' with { step: step, index: i, stepTypes: stepTypes } %}
+        {% endfor %}
+    </div>
+
+    <div style="display:flex;gap:10px;margin:16px 0;align-items:center">
+        <select id="new-step-type" class="select">
+            {% for typeKey, typeConfig in stepTypes %}
+                <option value="{{ typeKey }}">{{ typeConfig.label }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" id="btn-add-step" class="btn">+ Step hinzufügen</button>
+    </div>
+
+    <hr>
+    <div style="display:flex;gap:10px">
+        <button type="submit" formaction="{{ cpUrl('synmon/suites/save') }}" class="btn submit">Speichern</button>
+        <a href="{{ cpUrl('synmon/suites') }}" class="btn">Abbrechen</a>
+        {% if suite %}
+            <button type="button" class="btn btn-run-suite" data-suite-id="{{ suite.id }}" style="margin-left:auto">▶ Jetzt testen</button>
+        {% endif %}
+    </div>
+</form>
+
+{% endblock %}
