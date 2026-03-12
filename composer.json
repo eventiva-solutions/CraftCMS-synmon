@@ -1,12 +1,24 @@
 {
   "name": "eventiva/craft-synmon",
-  "description": "Plugin name: SynMon",
+  "description": "Synthetic monitoring for Craft CMS — E2E browser tests directly from the Control Panel, powered by Playwright.",
   "type": "craft-plugin",
-  "license": "proprietary",
+  "license": "craft",
+  "version": "1.0.0",
+  "support": {
+    "email": "info@eventiva.io",
+    "issues": "https://github.com/eventiva-solutions/synmon/issues?state=open",
+    "source": "https://github.com/eventiva-solutions/synmon",
+    "docs": "https://github.com/eventiva-solutions/synmon",
+    "rss": "https://github.com/eventiva-solutions/synmon/releases.atom"
+  },
   "require": {
     "php": ">=8.2",
     "craftcms/cms": "^5.5.0",
     "dragonmantank/cron-expression": "^3.3"
+  },
+  "require-dev": {
+    "craftcms/ecs": "dev-main",
+    "craftcms/phpstan": "dev-main"
   },
   "autoload": {
     "psr-4": {
@@ -17,7 +29,15 @@
     "handle": "synmon",
     "name": "SynMon",
     "developer": "Eventiva",
+    "developerUrl": "https://eventiva.io",
+    "documentationUrl": "https://github.com/eventiva-solutions/synmon",
+    "changelogUrl": "https://raw.githubusercontent.com/eventiva-solutions/synmon/main/CHANGELOG.md",
     "class": "eventiva\\synmon\\SynMon"
+  },
+  "scripts": {
+    "check-cs": "ecs check --ansi",
+    "fix-cs": "ecs check --ansi --fix",
+    "phpstan": "phpstan --memory-limit=1G"
   },
   "config": {
     "sort-packages": true,

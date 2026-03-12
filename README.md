@@ -1,5 +1,9 @@
 # SynMon - Synthetic Monitoring for Craft CMS
 
+[![Craft CMS 5](https://img.shields.io/badge/Craft%20CMS-5.5%2B-e5422b)](https://craftcms.com)
+[![PHP 8.2+](https://img.shields.io/badge/PHP-8.2%2B-8892be)](https://php.net)
+[![License](https://img.shields.io/badge/License-Craft-blue)](LICENSE.md)
+
 E2E browser tests directly from the Craft Control Panel. Configurable test suites run headless via Playwright (Node.js), execute automatically on a cron schedule, and store step-by-step logs with screenshots. Failure notifications are sent via email and/or webhook.
 
 ---
@@ -29,53 +33,18 @@ E2E browser tests directly from the Craft Control Panel. Configurable test suite
 
 ## Installation
 
-### 1. Clone the plugin repository
+### 1. Install via Craft Plugin Store
+
+Search for **SynMon** in the Craft Control Panel under **Settings → Plugins**, or install via Composer:
 
 ```bash
-cd /var/www/html   # project root
-git clone https://github.com/eventiva-solutions/synmon.git plugins/synmon
-```
-
-### 2. Configure Composer
-
-In the **project root** (not the plugin directory), update `composer.json`:
-
-```json
-{
-    "repositories": [
-        {
-            "type": "path",
-            "url": "plugins/synmon"
-        }
-    ],
-    "require": {
-        "eventiva/craft-synmon": "@dev"
-    }
-}
-```
-
-Or via CLI:
-
-```bash
-composer config repositories.synmon '{"type":"path","url":"plugins/synmon"}'
-composer require eventiva/craft-synmon:@dev
-```
-
-### 3. Run Composer update
-
-```bash
-composer update eventiva/craft-synmon
-```
-
-### 4. Install the plugin
-
-```bash
+composer require eventiva/craft-synmon
 php craft plugin/install synmon
 ```
 
-Database tables are created automatically on the first request — no manual migration required.
+Database tables are created automatically on the first request - no manual migration required.
 
-### 5. Check the Node.js path
+### 2. Check the Node.js path
 
 Find the path to your Node binary:
 

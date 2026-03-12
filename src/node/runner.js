@@ -205,20 +205,23 @@ async function runStep(page, step, timeout) {
             let found = false;
             while (Date.now() < deadline) {
                 try {
-                found = await page.evaluate(([sel, txt]) => {
-                    function searchInRoot(root) {
-                        const elements = root.querySelectorAll(sel);
-                        if (Array.from(elements).some(el =>
-                            (el.innerText || el.textContent || '').includes(txt)
-                        )) return true;
-                        // Recurse into shadow roots
-                        for (const el of root.querySelectorAll('*')) {
-                            if (el.shadowRoot && searchInRoot(el.shadowRoot)) return true;
+                    found = await page.evaluate(([sel, txt]) => {
+                        function searchInRoot(root) {
+                            const elements = root.querySelectorAll(sel);
+                            if (Array.from(elements).some(el =>
+                                (el.innerText || el.textContent || '').includes(txt)
+                            )) return true;
+                            // Recurse into shadow roots
+                            for (const el of root.querySelectorAll('*')) {
+                                if (el.shadowRoot && searchInRoot(el.shadowRoot)) return true;
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                    return searchInRoot(document);
-                }, [step.selector, step.value || '']);
+                        return searchInRoot(document);
+                    }, [step.selector, step.value || '']);
+                } catch (_) {
+                    // Context may be temporarily unavailable during navigation
+                }
                 if (found) break;
                 await new Promise(r => setTimeout(r, 250));
             }
