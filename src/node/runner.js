@@ -241,14 +241,14 @@ async function runStep(page, step, timeout) {
 
                 let msg = `assertText: "${step.value}" not found in "${step.selector}".`;
                 if (existsOnPage && countInSel > 0) {
-                    msg += ` ⚠️ Text ist auf der Seite sichtbar, aber nicht in "${step.selector}" (${countInSel} Elemente gefunden). Tipp: Selector anpassen, z.B. übergeordnetes Element oder :last-child verwenden.`;
-                    if (actualInSel) msg += ` Gefundener Text dort: "${actualInSel}"`;
+                    msg += ` ⚠️ Text is visible on the page but not in "${step.selector}" (${countInSel} element(s) found). Tip: broaden the selector, e.g. use a parent element or :last-child.`;
+                    if (actualInSel) msg += ` Text found there: "${actualInSel}"`;
                 } else if (existsOnPage) {
-                    msg += ` ⚠️ Text ist auf der Seite vorhanden, aber Selector "${step.selector}" findet kein Element.`;
+                    msg += ` ⚠️ Text exists on the page but selector "${step.selector}" matches no element.`;
                 } else if (countInSel > 0) {
-                    msg += ` Gefundener Text in ${countInSel} Element(en): "${actualInSel || '(leer)'}"`;
+                    msg += ` Text found in ${countInSel} element(s): "${actualInSel || '(empty)'}"`;
                 } else {
-                    msg += ` Kein Element mit Selector "${step.selector}" gefunden und Text nicht auf Seite.`;
+                    msg += ` No element matching "${step.selector}" found and text not on page.`;
                 }
                 throw new Error(msg);
             }

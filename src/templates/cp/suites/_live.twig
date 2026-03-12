@@ -6,9 +6,33 @@
 {% set selectedSubnavItem = 'suites' %}
 {% set crumbs = [
     { label: 'SynMon', url: cpUrl('synmon') },
-    { label: 'Test Suites', url: cpUrl('synmon/suites') },
+    { label: 'Test Suites'|t('synmon'), url: cpUrl('synmon/suites') },
     { label: suite.name, url: cpUrl('synmon/suites/' ~ suite.id) },
 ] %}
+
+{% js %}
+window.synmonI18n = {
+    ready:             {{ '— ready —'|t('synmon')|json_encode|raw }},
+    starting:          {{ '— starting —'|t('synmon')|json_encode|raw }},
+    saveAndRunLive:    {{ 'Save & Run Live'|t('synmon')|json_encode|raw }},
+    saving:            {{ '⏳ Saving...'|t('synmon')|json_encode|raw }},
+    savingSteps:       {{ 'Saving steps...'|t('synmon')|json_encode|raw }},
+    testRunning:       {{ '⏳ Test running...'|t('synmon')|json_encode|raw }},
+    savedStarting:     {{ 'Saved. Starting live test...'|t('synmon')|json_encode|raw }},
+    waitingFirstStep:  {{ 'Waiting for first step...'|t('synmon')|json_encode|raw }},
+    startingTest:      {{ 'Starting test...'|t('synmon')|json_encode|raw }},
+    testFinished:      {{ 'Test finished – Status:'|t('synmon')|json_encode|raw }},
+    testCancelled:     {{ '🛑 Test cancelled.'|t('synmon')|json_encode|raw }},
+    noOutput:          {{ 'No output.'|t('synmon')|json_encode|raw }},
+    noRequests:        {{ 'No requests.'|t('synmon')|json_encode|raw }},
+    waitingRequests:   {{ 'Waiting for requests...'|t('synmon')|json_encode|raw }},
+    stepsPending:      {{ 'step(s) pending...'|t('synmon')|json_encode|raw }},
+    cancel:            {{ '✕ Cancel'|t('synmon')|json_encode|raw }},
+    errorSaving:       {{ 'Error saving:'|t('synmon')|json_encode|raw }},
+    errorStarting:     {{ 'Error starting:'|t('synmon')|json_encode|raw }},
+    error:             {{ 'Error:'|t('synmon')|json_encode|raw }},
+};
+{% endjs %}
 
 {% block content %}
 <div id="synmon-live-wrap" style="display:flex;flex-direction:column;gap:0;margin-top:-8px">
@@ -18,11 +42,11 @@
 
         {# Top action bar #}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-            <h2 style="margin:0">Test Steps</h2>
+            <h2 style="margin:0">{{ 'Test Steps'|t('synmon') }}</h2>
             <div style="display:flex;gap:8px;align-items:center">
-                <a href="{{ cpUrl('synmon/suites/' ~ suite.id) }}" class="btn small">← Zurück</a>
-                <button id="btn-live-cancel" class="btn small" style="display:none;background:#dc2626;color:#fff;border-color:#dc2626">✕ Abbrechen</button>
-                <button id="btn-live-run" class="btn submit small" data-suite-id="{{ suite.id }}">▶ Speichern &amp; Live testen</button>
+                <a href="{{ cpUrl('synmon/suites/' ~ suite.id) }}" class="btn small">← {{ 'Back'|t('synmon') }}</a>
+                <button id="btn-live-cancel" class="btn small" style="display:none;background:#dc2626;color:#fff;border-color:#dc2626">✕ {{ 'Cancel'|t('synmon') }}</button>
+                <button id="btn-live-run" class="btn submit small" data-suite-id="{{ suite.id }}">▶ {{ 'Save & Run Live'|t('synmon') }}</button>
             </div>
         </div>
 
@@ -45,14 +69,14 @@
                         <option value="{{ typeKey }}">{{ typeConfig.label }}</option>
                     {% endfor %}
                 </select>
-                <button type="button" id="btn-add-step" class="btn small">+ Step hinzufügen</button>
+                <button type="button" id="btn-add-step" class="btn small">+ {{ 'Add Step'|t('synmon') }}</button>
             </div>
         </form>
 
         {# Bottom action bar #}
         <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
-            <button id="btn-live-run-bottom" class="btn submit small" data-suite-id="{{ suite.id }}">▶ Speichern &amp; Live testen</button>
-            <button id="btn-live-cancel-bottom" class="btn small" style="display:none;background:#dc2626;color:#fff;border-color:#dc2626">✕ Abbrechen</button>
+            <button id="btn-live-run-bottom" class="btn submit small" data-suite-id="{{ suite.id }}">▶ {{ 'Save & Run Live'|t('synmon') }}</button>
+            <button id="btn-live-cancel-bottom" class="btn small" style="display:none;background:#dc2626;color:#fff;border-color:#dc2626">✕ {{ 'Cancel'|t('synmon') }}</button>
         </div>
 
         <div id="live-status-msg" style="margin-top:8px;font-size:13px;color:#6b7280"></div>
@@ -69,7 +93,7 @@
                 <span style="width:12px;height:12px;border-radius:50%;background:#22c55e;display:inline-block"></span>
             </div>
             <div id="live-url-bar" style="flex:1;background:#0f172a;border-radius:4px;padding:3px 12px;font-size:12px;font-family:monospace;color:#94a3b8">
-                — bereit —
+                {{ '— ready —'|t('synmon') }}
             </div>
             <span id="live-step-label" style="font-size:11px;color:#475569;font-family:monospace"></span>
             <div id="live-run-badge" style="font-size:11px;color:#64748b"></div>
@@ -82,8 +106,8 @@
             <div id="live-screenshot-wrap" style="overflow:hidden;position:relative;background:#1e293b;display:flex;align-items:center;justify-content:center;border-right:1px solid #334155">
                 <div id="live-screenshot-placeholder" style="text-align:center;color:#475569">
                     <div style="font-size:48px;margin-bottom:12px">🖥️</div>
-                    <div style="font-size:13px">Browser-Vorschau erscheint hier während des Tests</div>
-                    <div style="font-size:11px;color:#334155;margin-top:6px">Klick auf Step im Protokoll → Screenshot wechseln</div>
+                    <div style="font-size:13px">{{ 'Browser preview appears here during the test'|t('synmon') }}</div>
+                    <div style="font-size:11px;color:#334155;margin-top:6px">{{ 'Click step in log → switch screenshot'|t('synmon') }}</div>
                 </div>
                 <img id="live-screenshot-img" src="" alt="Screenshot"
                     style="display:none;max-width:100%;max-height:100%;object-fit:contain;width:100%;height:100%">
@@ -98,29 +122,29 @@
                 <div style="display:flex;border-bottom:1px solid #334155;flex-shrink:0">
                     <button id="tab-protocol" onclick="synmonTab('protocol')"
                         style="padding:6px 16px;font-size:11px;font-weight:600;color:#e2e8f0;background:#1e293b;border:none;border-bottom:2px solid #3b82f6;cursor:pointer;text-transform:uppercase;letter-spacing:.5px">
-                        Protokoll
+                        {{ 'Log'|t('synmon') }}
                     </button>
                     <button id="tab-network" onclick="synmonTab('network')"
                         style="padding:6px 16px;font-size:11px;font-weight:600;color:#64748b;background:#1e293b;border:none;border-bottom:2px solid transparent;cursor:pointer;text-transform:uppercase;letter-spacing:.5px">
-                        Netzwerk <span id="net-count" style="background:#334155;border-radius:10px;padding:1px 6px;font-size:10px">0</span>
+                        {{ 'Network'|t('synmon') }} <span id="net-count" style="background:#334155;border-radius:10px;padding:1px 6px;font-size:10px">0</span>
                     </button>
                     <button id="tab-console" onclick="synmonTab('console')"
                         style="padding:6px 16px;font-size:11px;font-weight:600;color:#64748b;background:#1e293b;border:none;border-bottom:2px solid transparent;cursor:pointer;text-transform:uppercase;letter-spacing:.5px">
-                        Console <span id="console-count" style="background:#334155;border-radius:10px;padding:1px 6px;font-size:10px">0</span>
+                        {{ 'Console'|t('synmon') }} <span id="console-count" style="background:#334155;border-radius:10px;padding:1px 6px;font-size:10px">0</span>
                     </button>
                 </div>
 
                 {# Protocol panel #}
                 <div id="panel-protocol" style="flex:1;overflow-y:auto;padding:10px 14px">
                     <div id="live-timeline-steps" style="display:flex;flex-direction:column;gap:4px">
-                        <div style="font-size:12px;color:#475569;font-style:italic">Noch kein Test gestartet.</div>
+                        <div style="font-size:12px;color:#475569;font-style:italic">{{ 'No test started yet.'|t('synmon') }}</div>
                     </div>
                 </div>
 
                 {# Console panel #}
                 <div id="panel-console" style="flex:1;overflow-y:auto;padding:0;display:none;background:#0f172a">
                     <div id="console-log-body" style="padding:8px 12px;font-size:11px;font-family:monospace;display:flex;flex-direction:column;gap:2px">
-                        <div style="color:#475569;font-style:italic;font-family:sans-serif">Keine Ausgaben.</div>
+                        <div style="color:#475569;font-style:italic;font-family:sans-serif">{{ 'No output.'|t('synmon') }}</div>
                     </div>
                 </div>
 
@@ -130,12 +154,12 @@
                         <thead style="position:sticky;top:0;background:#0f172a">
                             <tr>
                                 <th style="padding:5px 10px;text-align:left;color:#64748b;font-weight:600;width:60px">Method</th>
-                                <th style="padding:5px 10px;text-align:left;color:#64748b;font-weight:600;width:48px">Status</th>
+                                <th style="padding:5px 10px;text-align:left;color:#64748b;font-weight:600;width:48px">{{ 'Status'|t('synmon') }}</th>
                                 <th style="padding:5px 10px;text-align:left;color:#64748b;font-weight:600">URL</th>
                             </tr>
                         </thead>
                         <tbody id="network-log-body">
-                            <tr><td colspan="3" style="padding:10px;color:#475569;font-style:italic;font-family:sans-serif">Keine Requests.</td></tr>
+                            <tr><td colspan="3" style="padding:10px;color:#475569;font-style:italic;font-family:sans-serif">{{ 'No requests.'|t('synmon') }}</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -158,6 +182,7 @@ function synmonTab(tab) {
 }
 
 (function () {
+    var i18n          = window.synmonI18n || {};
     var suiteId       = {{ suite.id }};
     var csrfToken     = (window.Craft && Craft.csrfTokenValue) || '';
     var saveAjaxUrl   = {{ cpUrl('synmon/suites/save-ajax')|json_encode|raw }};
@@ -234,7 +259,7 @@ function synmonTab(tab) {
         allStepLogs = stepLogs;
         $timeline.innerHTML = '';
         if (!stepLogs || stepLogs.length === 0) {
-            $timeline.innerHTML = '<div style="font-size:12px;color:#475569;font-style:italic">Warte auf ersten Step...</div>';
+            $timeline.innerHTML = '<div style="font-size:12px;color:#475569;font-style:italic">' + escHtml(i18n.waitingFirstStep || 'Waiting for first step...') + '</div>';
             return;
         }
         stepLogs.forEach(function (log) {
@@ -271,7 +296,7 @@ function synmonTab(tab) {
         if (stepLogs.length < totalSteps) {
             var pending = document.createElement('div');
             pending.style.cssText = 'font-size:12px;color:#475569;padding:4px 6px';
-            pending.textContent = '⏳ ' + (totalSteps - stepLogs.length) + ' Step(s) ausstehend...';
+            pending.textContent = '⏳ ' + (totalSteps - stepLogs.length) + ' ' + (i18n.stepsPending || 'step(s) pending...');
             $timeline.appendChild(pending);
         }
 
@@ -298,7 +323,7 @@ function synmonTab(tab) {
         });
         document.getElementById('console-count').textContent = lines.length;
         if (!lines.length) {
-            body.innerHTML = '<div style="color:#475569;font-style:italic;font-family:sans-serif">Keine Ausgaben.</div>';
+            body.innerHTML = '<div style="color:#475569;font-style:italic;font-family:sans-serif">' + escHtml(i18n.noOutput || 'No output.') + '</div>';
             return;
         }
         body.innerHTML = '';
@@ -383,8 +408,8 @@ function synmonTab(tab) {
                     var colors = { pass: '#16a34a', fail: '#dc2626', error: '#d97706', cancelled: '#6b7280' };
                     var icon  = icons[data.status]  || '❌';
                     var color = colors[data.status] || '#dc2626';
-                    setStatus(icon + ' Test beendet – Status: ' + data.status.toUpperCase(), color);
-                    setRunBtn(false, '▶ Speichern & Live testen');
+                    setStatus(icon + ' ' + (i18n.testFinished || 'Test finished – Status:') + ' ' + data.status.toUpperCase(), color);
+                    setRunBtn(false, '▶ ' + (i18n.saveAndRunLive || 'Save & Run Live'));
                     $badge.textContent = 'Run #' + runId + ' · ' + data.status;
                     $badge.style.color = color;
                 }
@@ -412,36 +437,36 @@ function synmonTab(tab) {
                 pollInterval = null;
                 setCancelBtn(false);
                 [$cancelBtn, $cancelBtnB].forEach(function (b) { b.disabled = false; });
-                setStatus('🛑 Test abgebrochen.', '#6b7280');
-                setRunBtn(false, '▶ Speichern & Live testen');
+                setStatus(i18n.testCancelled || '🛑 Test cancelled.', '#6b7280');
+                setRunBtn(false, '▶ ' + (i18n.saveAndRunLive || 'Save & Run Live'));
                 $badge.textContent = 'Run #' + currentRunId + ' · cancelled';
                 $badge.style.color = '#6b7280';
                 renderTimeline([], 0);
             }
         })
         .catch(function () {
-            [$cancelBtn, $cancelBtnB].forEach(function (b) { b.disabled = false; b.textContent = '✕ Abbrechen'; });
+            [$cancelBtn, $cancelBtnB].forEach(function (b) { b.disabled = false; b.textContent = i18n.cancel || '✕ Cancel'; });
         });
     }
     $cancelBtn.addEventListener('click', doCancel);
     $cancelBtnB.addEventListener('click', doCancel);
 
     $btn.addEventListener('click', function () {
-        setRunBtn(true, '⏳ Speichere...');
-        setStatus('Speichere Steps...', '#6b7280');
+        setRunBtn(true, i18n.saving || '⏳ Saving...');
+        setStatus(i18n.savingSteps || 'Saving steps...', '#6b7280');
         screenshotIdx  = null;
         manualSelect   = false;
         allStepLogs    = [];
         networkEntries = [];
-        document.getElementById('network-log-body').innerHTML = '<tr><td colspan="3" style="padding:10px;color:#475569;font-style:italic;font-family:sans-serif">Warte auf Requests...</td></tr>';
-        document.getElementById('console-log-body').innerHTML = '<div style="color:#475569;font-style:italic;font-family:sans-serif">Keine Ausgaben.</div>';
+        document.getElementById('network-log-body').innerHTML = '<tr><td colspan="3" style="padding:10px;color:#475569;font-style:italic;font-family:sans-serif">' + escHtml(i18n.waitingRequests || 'Waiting for requests...') + '</td></tr>';
+        document.getElementById('console-log-body').innerHTML = '<div style="color:#475569;font-style:italic;font-family:sans-serif">' + escHtml(i18n.noOutput || 'No output.') + '</div>';
         document.getElementById('net-count').textContent = '0';
         document.getElementById('console-count').textContent = '0';
         synmonTab('protocol'); // switch back to protocol tab on new test
         $img.style.display = 'none';
         $imgPlaceholder.style.display = 'block';
-        $timeline.innerHTML = '<div style="font-size:12px;color:#475569;font-style:italic">Starte Test...</div>';
-        $urlBar.textContent = '— wird gestartet —';
+        $timeline.innerHTML = '<div style="font-size:12px;color:#475569;font-style:italic">' + escHtml(i18n.startingTest || 'Starting test...') + '</div>';
+        $urlBar.textContent = i18n.starting || '— starting —';
         var labelEl2 = document.getElementById('live-step-label');
         if (labelEl2) labelEl2.textContent = '';
         $badge.textContent = '';
@@ -465,12 +490,12 @@ function synmonTab(tab) {
         .then(function (res) {
             var data = res.data;
             if (!res.ok || !data.success) {
-                setStatus('❌ Fehler beim Speichern: ' + (data.error || data.message || JSON.stringify(data)), '#dc2626');
-                setRunBtn(false, '▶ Speichern & Live testen');
+                setStatus('❌ ' + (i18n.errorSaving || 'Error saving:') + ' ' + (data.error || data.message || JSON.stringify(data)), '#dc2626');
+                setRunBtn(false, '▶ ' + (i18n.saveAndRunLive || 'Save & Run Live'));
                 return Promise.reject('save-failed');
             }
-            setStatus('✓ Gespeichert. Starte Live-Test...', '#16a34a');
-            setRunBtn(true, '⏳ Test läuft...');
+            setStatus('✓ ' + (i18n.savedStarting || 'Saved. Starting live test...'), '#16a34a');
+            setRunBtn(true, i18n.testRunning || '⏳ Test running...');
 
             var fd2 = new FormData();
             fd2.append('suiteId', data.suiteId || suiteId);
@@ -484,14 +509,14 @@ function synmonTab(tab) {
         .then(function (r) { return r && r.json(); })
         .then(function (data) {
             if (!data || !data.success) {
-                setStatus('❌ Fehler beim Starten: ' + (data && (data.error || data.message || JSON.stringify(data)) || 'Keine Details'), '#dc2626');
-                setRunBtn(false, '▶ Speichern & Live testen');
+                setStatus('❌ ' + (i18n.errorStarting || 'Error starting:') + ' ' + (data && (data.error || data.message || JSON.stringify(data)) || 'No details'), '#dc2626');
+                setRunBtn(false, '▶ ' + (i18n.saveAndRunLive || 'Save & Run Live'));
                 return;
             }
             currentRunId = data.runId;
             $badge.textContent = 'Run #' + currentRunId;
             $badge.style.color = '#f59e0b';
-            setStatus('⏳ Test läuft (Run #' + currentRunId + ')...', '#d97706');
+            setStatus('⏳ ' + (i18n.testRunning || 'Test running...') + ' (Run #' + currentRunId + ')', '#d97706');
             setCancelBtn(true);
 
             // Step 3: Poll every 1s
@@ -500,8 +525,8 @@ function synmonTab(tab) {
         })
         .catch(function (e) {
             if (e === 'save-failed') return;
-            setStatus('❌ Fehler: ' + (e && e.message || e), '#dc2626');
-            setRunBtn(false, '▶ Speichern & Live testen');
+            setStatus('❌ ' + (i18n.error || 'Error:') + ' ' + (e && e.message || e), '#dc2626');
+            setRunBtn(false, '▶ ' + (i18n.saveAndRunLive || 'Save & Run Live'));
         });
     });
 })();

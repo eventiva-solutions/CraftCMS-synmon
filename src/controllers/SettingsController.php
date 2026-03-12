@@ -26,7 +26,7 @@ class SettingsController extends Controller
         $pwAvailable   = SynMon::getInstance()->getRunnerService()->checkPlaywrightAvailable();
 
         return $this->renderTemplate('synmon/cp/settings', [
-            'title'          => 'SynMon Einstellungen',
+            'title'          => Craft::t('synmon', 'SynMon Settings'),
             'settings'       => $settings,
             'nodeAvailable'  => $nodeAvailable,
             'pwAvailable'    => $pwAvailable,
@@ -47,7 +47,7 @@ class SettingsController extends Controller
         ];
 
         SynMon::getInstance()->getResultService()->saveSettings($settings);
-        Craft::$app->getSession()->setNotice('Einstellungen gespeichert.');
+        Craft::$app->getSession()->setNotice(Craft::t('synmon', 'Settings saved.'));
         return $this->redirect('synmon/settings');
     }
 }

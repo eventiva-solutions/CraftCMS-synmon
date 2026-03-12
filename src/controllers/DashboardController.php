@@ -35,7 +35,7 @@ class DashboardController extends Controller
         }
 
         return $this->renderTemplate('synmon/cp/dashboard/index', [
-            'title'    => 'SynMon Dashboard',
+            'title'    => Craft::t('synmon', 'SynMon Dashboard'),
             'stats'    => $stats,
             'settings' => $settings,
             'suites'   => $suites,

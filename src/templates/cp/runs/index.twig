@@ -1,7 +1,7 @@
 {% extends '_layouts/cp' %}
 {% do view.registerAssetBundle('eventiva\\synmon\\assetbundles\\SynMonAssetBundle') %}
 
-{% set title = 'Run History' %}
+{% set title = 'Run History'|t('synmon') %}
 {% set selectedSubnavItem = 'runs' %}
 
 {% block content %}
@@ -9,25 +9,25 @@
 <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
     <form method="get" style="display:flex;gap:8px;flex-wrap:wrap">
         <select name="suiteId" class="select">
-            <option value="">Alle Suites</option>
+            <option value="">{{ 'All Suites'|t('synmon') }}</option>
             {% for s in suites %}
                 <option value="{{ s.id }}" {{ suiteId == s.id ? 'selected' : '' }}>{{ s.name }}</option>
             {% endfor %}
         </select>
         <select name="status" class="select">
-            <option value="">Alle Status</option>
+            <option value="">{{ 'All Statuses'|t('synmon') }}</option>
             <option value="pass"    {{ status == 'pass'    ? 'selected' : '' }}>Pass</option>
             <option value="fail"    {{ status == 'fail'    ? 'selected' : '' }}>Fail</option>
             <option value="error"   {{ status == 'error'   ? 'selected' : '' }}>Error</option>
             <option value="running" {{ status == 'running' ? 'selected' : '' }}>Running</option>
         </select>
-        <button type="submit" class="btn">Filter</button>
+        <button type="submit" class="btn">{{ 'Filter'|t('synmon') }}</button>
     </form>
 
-    <form method="post" style="margin-left:auto" onsubmit="return confirm('Alte Runs wirklich löschen?')">
+    <form method="post" style="margin-left:auto" onsubmit="return confirm({{ 'Really delete old runs?'|t('synmon')|json_encode|raw }})">
         {{ csrfInput() }}
         <input type="hidden" name="days" value="30">
-        <button type="submit" formaction="{{ cpUrl('synmon/runs/purge') }}" class="btn">Runs > 30 Tage löschen</button>
+        <button type="submit" formaction="{{ cpUrl('synmon/runs/purge') }}" class="btn">{{ 'Delete Runs > 30 days'|t('synmon') }}</button>
     </form>
 </div>
 
@@ -35,12 +35,12 @@
     <thead>
         <tr>
             <th>#</th>
-            <th>Suite</th>
-            <th>Status</th>
-            <th>Dauer</th>
-            <th>Trigger</th>
-            <th>Node</th>
-            <th>Datum</th>
+            <th>{{ 'Suite'|t('synmon') }}</th>
+            <th>{{ 'Status'|t('synmon') }}</th>
+            <th>{{ 'Duration'|t('synmon') }}</th>
+            <th>{{ 'Trigger'|t('synmon') }}</th>
+            <th>{{ 'Node'|t('synmon') }}</th>
+            <th>{{ 'Date'|t('synmon') }}</th>
             <th></th>
         </tr>
     </thead>
@@ -55,24 +55,24 @@
             <td><small>{{ run.nodeVersion ?? '—' }}</small></td>
             <td>{{ run.dateCreated|date('d.m.Y H:i') }}</td>
             <td>
-                <form method="post" style="display:inline" onsubmit="return confirm('Run löschen?')">
+                <form method="post" style="display:inline" onsubmit="return confirm({{ 'Delete run?'|t('synmon')|json_encode|raw }})">
                     {{ csrfInput() }}
                     <input type="hidden" name="runId" value="{{ run.id }}">
-                    <button type="submit" formaction="{{ cpUrl('synmon/runs/delete') }}" class="btn small">Löschen</button>
+                    <button type="submit" formaction="{{ cpUrl('synmon/runs/delete') }}" class="btn small">{{ 'Delete'|t('synmon') }}</button>
                 </form>
             </td>
         </tr>
         {% else %}
-        <tr><td colspan="8" style="text-align:center;color:#999;padding:40px">Keine Runs vorhanden.</td></tr>
+        <tr><td colspan="8" style="text-align:center;color:#999;padding:40px">{{ 'No runs found.'|t('synmon') }}</td></tr>
         {% endfor %}
     </tbody>
 </table>
 
 {% if totalPages > 1 %}
 <div style="display:flex;gap:8px;margin-top:16px">
-    {% if page > 1 %}<a href="?page={{ page-1 }}&suiteId={{ suiteId }}&status={{ status }}" class="btn">← Zurück</a>{% endif %}
-    <span style="align-self:center">Seite {{ page }} / {{ totalPages }} ({{ total }} Runs)</span>
-    {% if page < totalPages %}<a href="?page={{ page+1 }}&suiteId={{ suiteId }}&status={{ status }}" class="btn">Weiter →</a>{% endif %}
+    {% if page > 1 %}<a href="?page={{ page-1 }}&suiteId={{ suiteId }}&status={{ status }}" class="btn">← {{ 'Back'|t('synmon') }}</a>{% endif %}
+    <span style="align-self:center">{{ 'Page {page} / {totalPages} ({total} Runs)'|t('synmon', {page: page, totalPages: totalPages, total: total}) }}</span>
+    {% if page < totalPages %}<a href="?page={{ page+1 }}&suiteId={{ suiteId }}&status={{ status }}" class="btn">{{ 'Next'|t }} →</a>{% endif %}
 </div>
 {% endif %}
 

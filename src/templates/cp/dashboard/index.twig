@@ -3,7 +3,7 @@
 
 {% do view.registerAssetBundle('eventiva\\synmon\\assetbundles\\SynMonAssetBundle') %}
 
-{% set title = 'SynMon Dashboard' %}
+{% set title = 'SynMon Dashboard'|t('synmon') %}
 {% set selectedSubnavItem = 'dashboard' %}
 {% set crumbs = [{ label: 'SynMon', url: cpUrl('synmon') }] %}
 
@@ -18,50 +18,50 @@
 <div class="synmon-stats-grid">
     <div class="synmon-stat-card">
         <div class="synmon-stat-value">{{ stats.totalSuites }}</div>
-        <div class="synmon-stat-label">Test Suites</div>
+        <div class="synmon-stat-label">{{ 'Test Suites'|t('synmon') }}</div>
     </div>
     <div class="synmon-stat-card">
         <div class="synmon-stat-value">{{ stats.totalRuns }}</div>
-        <div class="synmon-stat-label">Gesamt Runs</div>
+        <div class="synmon-stat-label">{{ 'Total Runs'|t('synmon') }}</div>
     </div>
     <div class="synmon-stat-card">
         <div class="synmon-stat-value" style="color:#155724">{{ stats.passRuns }}</div>
-        <div class="synmon-stat-label">Passed</div>
+        <div class="synmon-stat-label">{{ 'Passed'|t('synmon') }}</div>
     </div>
     <div class="synmon-stat-card">
         <div class="synmon-stat-value" style="color:#721c24">{{ stats.failRuns }}</div>
-        <div class="synmon-stat-label">Failed</div>
+        <div class="synmon-stat-label">{{ 'Failed'|t('synmon') }}</div>
     </div>
     <div class="synmon-stat-card">
         <div class="synmon-stat-value">{{ stats.passRate }}%</div>
-        <div class="synmon-stat-label">Pass Rate</div>
+        <div class="synmon-stat-label">{{ 'Pass Rate'|t('synmon') }}</div>
     </div>
 </div>
 
 <div style="display:flex;align-items:center;justify-content:space-between;margin:24px 0 8px">
-    <h2 style="margin:0">Test Suites</h2>
+    <h2 style="margin:0">{{ 'Test Suites'|t('synmon') }}</h2>
     <div style="display:flex;gap:8px">
-        <button type="button" class="btn small" id="btn-import-suite">⬆ Import JSON</button>
-        <a href="{{ cpUrl('synmon/suites/new') }}" class="btn small submit">+ Neue Suite</a>
+        <button type="button" class="btn small" id="btn-import-suite">⬆ {{ 'Import JSON'|t('synmon') }}</button>
+        <a href="{{ cpUrl('synmon/suites/new') }}" class="btn small submit">+ {{ 'New Suite'|t('synmon') }}</a>
     </div>
 </div>
 
 {% if suites|length == 0 %}
 <div style="text-align:center;padding:40px 0;color:#999">
     <p style="font-size:28px">🔬</p>
-    <p>Noch keine Test-Suites vorhanden.</p>
-    <a href="{{ cpUrl('synmon/suites/new') }}" class="btn submit">Erste Suite erstellen</a>
+    <p>{{ 'No test suites yet.'|t('synmon') }}</p>
+    <a href="{{ cpUrl('synmon/suites/new') }}" class="btn submit">{{ 'Create First Suite'|t('synmon') }}</a>
 </div>
 {% else %}
 <table class="data fullwidth synmon-suite-table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Cron</th>
-            <th>Status</th>
-            <th>Aktiv</th>
-            <th>Letzter Run</th>
-            <th>Nächster Run</th>
+            <th>{{ 'Name'|t('synmon') }}</th>
+            <th>{{ 'Cron'|t('synmon') }}</th>
+            <th>{{ 'Status'|t('synmon') }}</th>
+            <th>{{ 'Active'|t('synmon') }}</th>
+            <th>{{ 'Last Run'|t('synmon') }}</th>
+            <th>{{ 'Next Run'|t('synmon') }}</th>
             <th></th>
         </tr>
     </thead>
@@ -90,19 +90,19 @@
                 {% if suite.enabled and nextRuns[suite.id] is defined %}
                     <span style="font-size:12px;color:#374151">{{ nextRuns[suite.id] }}</span>
                 {% else %}
-                    <span style="color:#aaa;font-size:12px">{{ suite.enabled ? '—' : 'deaktiviert' }}</span>
+                    <span style="color:#aaa;font-size:12px">{{ suite.enabled ? '—' : 'disabled'|t('synmon') }}</span>
                 {% endif %}
             </td>
             <td style="text-align:right;white-space:nowrap">
-                <button class="btn small btn-run-suite" data-suite-id="{{ suite.id }}" title="Im Hintergrund starten">▶ Starten</button>
-                <a href="{{ cpUrl('synmon/suites/' ~ suite.id ~ '/live') }}" class="btn small">🎬 Live</a>
-                <a href="{{ cpUrl('synmon/suites/' ~ suite.id) }}" class="btn small">Bearbeiten</a>
-                <a href="{{ cpUrl('synmon/suites/' ~ suite.id ~ '/export') }}" class="btn small" title="Als JSON exportieren">⬇ Export</a>
-                <form method="post" style="display:inline" onsubmit="return confirm('Suite klonen?')">
+                <button class="btn small btn-run-suite" data-suite-id="{{ suite.id }}" title="{{ 'Test now'|t('synmon') }}">▶ {{ 'Test now'|t('synmon') }}</button>
+                <a href="{{ cpUrl('synmon/suites/' ~ suite.id ~ '/live') }}" class="btn small">🎬 {{ 'Live test'|t('synmon') }}</a>
+                <a href="{{ cpUrl('synmon/suites/' ~ suite.id) }}" class="btn small">{{ 'Edit'|t }}</a>
+                <a href="{{ cpUrl('synmon/suites/' ~ suite.id ~ '/export') }}" class="btn small" title="{{ 'Export as JSON'|t('synmon') }}">⬇ Export</a>
+                <form method="post" style="display:inline" onsubmit="return confirm({{ 'Clone suite?'|t('synmon')|json_encode|raw }})">
                     {{ csrfInput() }}
-                    <button type="submit" formaction="{{ cpUrl('synmon/suites/' ~ suite.id ~ '/clone') }}" class="btn small">⎘ Klonen</button>
+                    <button type="submit" formaction="{{ cpUrl('synmon/suites/' ~ suite.id ~ '/clone') }}" class="btn small">⎘ {{ 'Clone'|t }}</button>
                 </form>
-                <form method="post" style="display:inline" onsubmit="return confirm('Suite löschen?')">
+                <form method="post" style="display:inline" onsubmit="return confirm({{ 'Delete suite?'|t('synmon')|json_encode|raw }})">
                     {{ csrfInput() }}
                     <input type="hidden" name="suiteId" value="{{ suite.id }}">
                     <button type="submit" formaction="{{ cpUrl('synmon/suites/delete') }}" class="btn small">✕</button>
@@ -115,16 +115,16 @@
 {% endif %}
 
 {% if stats.recentRuns|length %}
-<h2 style="margin-top:32px">Letzte Runs</h2>
+<h2 style="margin-top:32px">{{ 'Recent Runs'|t('synmon') }}</h2>
 <table class="data fullwidth">
     <thead>
         <tr>
             <th>#</th>
-            <th>Suite</th>
-            <th>Status</th>
-            <th>Dauer</th>
-            <th>Trigger</th>
-            <th>Datum</th>
+            <th>{{ 'Suite'|t('synmon') }}</th>
+            <th>{{ 'Status'|t('synmon') }}</th>
+            <th>{{ 'Duration'|t('synmon') }}</th>
+            <th>{{ 'Trigger'|t('synmon') }}</th>
+            <th>{{ 'Date'|t('synmon') }}</th>
         </tr>
     </thead>
     <tbody>

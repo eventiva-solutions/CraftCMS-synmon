@@ -86,13 +86,13 @@
             dataType: 'json',
         }).done(function (resp) {
             if (resp.success) {
-                Craft.cp.displayNotice('Suite in Queue eingereiht – Craft verarbeitet den Job automatisch.');
+                Craft.cp.displayNotice('Suite queued – Craft will process the job automatically.');
                 if (resp.runsUrl) {
                     setTimeout(function () { window.location.href = resp.runsUrl; }, 1200);
                 }
             }
         }).fail(function () {
-            Craft.cp.displayError('Fehler beim Einreihen.');
+            Craft.cp.displayError('Error queuing suite.');
             $btn.prop('disabled', false).text(origText);
         });
     });
@@ -176,23 +176,23 @@
         var day     = parts[2];
         var weekday = parts[4];
 
-        var timeStr = hour === '*' ? 'jede Stunde' : 'um ' + hour.split(',').map(function (h) {
+        var timeStr = hour === '*' ? 'every hour' : 'at ' + hour.split(',').map(function (h) {
             return h + ':' + (min === '0' || min === '00' ? '00' : min.padStart(2, '0'));
         }).join(', ');
 
-        var dayNames = ['', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+        var dayNames = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
         var dayStr;
 
         if (weekday !== '*' && day !== '*') {
             let wdLabels = weekday.split(',').map(function (d) { return dayNames[parseInt(d)] || d; });
-            dayStr = ' | Wochentage: ' + wdLabels.join(', ') + ', Monatstage: ' + day;
+            dayStr = ' | Weekdays: ' + wdLabels.join(', ') + ', Month days: ' + day;
         } else if (weekday !== '*') {
             let wdLabels = weekday.split(',').map(function (d) { return dayNames[parseInt(d)] || d; });
             dayStr = ' | ' + wdLabels.join(', ');
         } else if (day !== '*') {
-            dayStr = ' | Tag ' + day + '. im Monat';
+            dayStr = ' | Day ' + day + ' of month';
         } else {
-            dayStr = ' | täglich';
+            dayStr = ' | daily';
         }
 
         $preview.text('→ ' + timeStr + dayStr);

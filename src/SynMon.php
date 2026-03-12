@@ -71,7 +71,7 @@ class SynMon extends Plugin
         $item['subnav'] = [
             'dashboard' => ['label' => Craft::t('synmon', 'Dashboard'),    'url' => 'synmon'],
             'runs'      => ['label' => Craft::t('synmon', 'Run History'),  'url' => 'synmon/runs'],
-            'settings'  => ['label' => Craft::t('synmon', 'Einstellungen'),'url' => 'synmon/settings'],
+            'settings'  => ['label' => Craft::t('synmon', 'Settings'),     'url' => 'synmon/settings'],
         ];
 
         return $item;

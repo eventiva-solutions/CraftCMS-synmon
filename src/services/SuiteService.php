@@ -25,7 +25,7 @@ class SuiteService extends Component
     {
         $record = new SuiteRecord();
         $record->uid              = StringHelper::UUID();
-        $record->name             = $data['name'] ?? 'Neue Suite';
+        $record->name             = $data['name'] ?? Craft::t('synmon', 'New Suite');
         $record->description      = $data['description'] ?? null;
         $record->cronExpression   = $data['cronExpression'] ?? '*/5 * * * *';
         $record->enabled          = (bool)($data['enabled'] ?? true);
@@ -109,7 +109,7 @@ class SuiteService extends Component
 
         $clone              = new SuiteRecord();
         $clone->uid         = StringHelper::UUID();
-        $clone->name        = $source->name . ' (Kopie)';
+        $clone->name        = $source->name . Craft::t('synmon', ' (Copy)');
         $clone->description = $source->description;
         $clone->cronExpression   = $source->cronExpression;
         $clone->enabled          = false; // disabled by default so cron doesn't run it immediately
@@ -153,107 +153,107 @@ class SuiteService extends Component
 
     public function getStepTypes(): array
     {
-        $selectorTips = '<br><br><b>Selector-Tipps (allgemein):</b><br>'
-            . '• <code>#mein-id</code> → Element mit ID<br>'
-            . '• <code>.meine-klasse</code> → Element mit Klasse<br>'
-            . '• <code>input[name="vorname"]</code> → Attribut-Selektor<br>'
-            . '• <code>input[name="felder[]"][value="Option"]</code> → Checkbox mit bestimmtem Wert<br>'
-            . '• <code>form .btn-primary</code> → Kind-Element (Leerzeichen)<br>'
-            . '• <code>h2 + p</code> → direkt folgendes Geschwister-Element<br>'
-            . '• <code>li:first-child</code> / <code>li:last-child</code> → erstes/letztes Kind<br>'
-            . '• <code>p:nth-of-type(2)</code> → 2. Element dieses Typs<br>'
-            . '• <code>[data-fui-id*="kontakt"]</code> → Attribut enthält Wert (nützlich bei dynamischen IDs)';
+        $selectorTips = '<br><br><b>Selector tips (general):</b><br>'
+            . '• <code>#my-id</code> → element with ID<br>'
+            . '• <code>.my-class</code> → element with class<br>'
+            . '• <code>input[name="firstname"]</code> → attribute selector<br>'
+            . '• <code>input[name="items[]"][value="Option"]</code> → checkbox with specific value<br>'
+            . '• <code>form .btn-primary</code> → child element (space)<br>'
+            . '• <code>h2 + p</code> → immediately following sibling<br>'
+            . '• <code>li:first-child</code> / <code>li:last-child</code> → first/last child<br>'
+            . '• <code>p:nth-of-type(2)</code> → 2nd element of that type<br>'
+            . '• <code>[data-fui-id*="contact"]</code> → attribute contains value (useful for dynamic IDs)';
 
         return [
             'navigate' => [
-                'label' => 'Navigate', 'hasSelector' => false, 'hasValue' => true,
-                'valuePlaceholder' => 'https://example.com/kontakt',
-                'hint' => 'Ruft eine URL im Browser auf und wartet bis die Seite vollständig geladen ist.<br><b>Wert:</b> Vollständige URL inkl. <code>https://</code><br><b>Tipp:</b> Jeder Test sollte mit einem Navigate-Step beginnen.',
+                'label' => Craft::t('synmon', 'Navigate'), 'hasSelector' => false, 'hasValue' => true,
+                'valuePlaceholder' => 'https://example.com/contact',
+                'hint' => 'Opens a URL in the browser and waits until the page has fully loaded.<br><b>Value:</b> Full URL including <code>https://</code><br><b>Tip:</b> Every test should start with a Navigate step.',
             ],
             'click' => [
-                'label' => 'Click', 'hasSelector' => true, 'hasValue' => false,
+                'label' => Craft::t('synmon', 'Click'), 'hasSelector' => true, 'hasValue' => false,
                 'selectorPlaceholder' => 'button[type="submit"]',
-                'hint' => 'Klickt auf ein Element.<br><b>Selector:</b> CSS-Selector des Elements<br><b>Beispiele:</b><br>• <code>button[type="submit"]</code> → Absende-Button<br>• <code>#nav-kontakt</code> → Link mit ID<br>• <code>.btn-primary</code> → Button mit Klasse<br>• <code>a[href="/kontakt"]</code> → Link auf bestimmte URL<br>• <code>nav li:last-child a</code> → Letzter Nav-Link' . $selectorTips,
+                'hint' => 'Clicks an element.<br><b>Selector:</b> CSS selector of the element<br><b>Examples:</b><br>• <code>button[type="submit"]</code> → submit button<br>• <code>#nav-contact</code> → link with ID<br>• <code>.btn-primary</code> → button with class<br>• <code>a[href="/contact"]</code> → link to a specific URL<br>• <code>nav li:last-child a</code> → last nav link' . $selectorTips,
             ],
             'fill' => [
-                'label' => 'Fill Input', 'hasSelector' => true, 'hasValue' => true,
-                'selectorPlaceholder' => 'input[name="fields[vorname]"]',
-                'valuePlaceholder' => 'Max Mustermann',
-                'hint' => 'Trägt Text in ein Eingabefeld ein (überschreibt vorhandenen Inhalt).<br><b>Selector:</b> CSS-Selector des Eingabefelds<br><b>Beispiele:</b><br>• <code>input[name="fields[vorname]"]</code> → Craft Freeform Feld<br>• <code>input[type="email"]</code> → E-Mail-Feld<br>• <code>textarea[name="fields[nachricht]"]</code> → Textbereich<br>• <code>#search-input</code> → Suchfeld mit ID<br><b>Wert:</b> Der einzugebende Text' . $selectorTips,
+                'label' => Craft::t('synmon', 'Fill Input'), 'hasSelector' => true, 'hasValue' => true,
+                'selectorPlaceholder' => 'input[name="fields[firstname]"]',
+                'valuePlaceholder' => 'John Doe',
+                'hint' => 'Types text into an input field (overwrites existing content).<br><b>Selector:</b> CSS selector of the input field<br><b>Examples:</b><br>• <code>input[name="fields[firstname]"]</code> → Craft Freeform field<br>• <code>input[type="email"]</code> → email field<br>• <code>textarea[name="fields[message]"]</code> → text area<br>• <code>#search-input</code> → search field with ID<br><b>Value:</b> The text to enter' . $selectorTips,
             ],
             'select' => [
-                'label' => 'Select Option', 'hasSelector' => true, 'hasValue' => true,
-                'selectorPlaceholder' => 'select[name="fields[anrede]"]',
-                'valuePlaceholder' => 'Herr',
-                'hint' => 'Wählt eine Option in einem <code>&lt;select&gt;</code>-Dropdown.<br><b>Selector:</b> CSS-Selector des <code>&lt;select&gt;</code>-Elements<br><b>Beispiele:</b><br>• <code>select[name="fields[anrede]"]</code> → Craft Freeform Select<br>• <code>select#land</code> → Select mit ID<br><b>Wert:</b> Das <code>value</code>-Attribut der Option – <i>nicht</i> der angezeigte Text' . $selectorTips,
+                'label' => Craft::t('synmon', 'Select Option'), 'hasSelector' => true, 'hasValue' => true,
+                'selectorPlaceholder' => 'select[name="fields[salutation]"]',
+                'valuePlaceholder' => 'Mr',
+                'hint' => 'Selects an option in a <code>&lt;select&gt;</code> dropdown.<br><b>Selector:</b> CSS selector of the <code>&lt;select&gt;</code> element<br><b>Examples:</b><br>• <code>select[name="fields[salutation]"]</code> → Craft Freeform select<br>• <code>select#country</code> → select with ID<br><b>Value:</b> The <code>value</code> attribute of the option – <i>not</i> the displayed text' . $selectorTips,
             ],
             'pressKey' => [
-                'label' => 'Press Key', 'hasSelector' => false, 'hasValue' => true,
+                'label' => Craft::t('synmon', 'Press Key'), 'hasSelector' => false, 'hasValue' => true,
                 'valuePlaceholder' => 'Enter',
-                'hint' => 'Drückt eine Taste auf der Tastatur (wirkt auf das aktuell fokussierte Element).<br><b>Wert:</b> <code>Enter</code>, <code>Tab</code>, <code>Escape</code>, <code>Space</code>, <code>Backspace</code>, <code>Delete</code>, <code>ArrowDown</code>, <code>ArrowUp</code>, <code>ArrowLeft</code>, <code>ArrowRight</code><br><b>Tipp:</b> Nach einem <code>fill</code>-Step kann <code>Enter</code> ein Formular absenden.',
+                'hint' => 'Presses a key on the keyboard (acts on the currently focused element).<br><b>Value:</b> <code>Enter</code>, <code>Tab</code>, <code>Escape</code>, <code>Space</code>, <code>Backspace</code>, <code>Delete</code>, <code>ArrowDown</code>, <code>ArrowUp</code>, <code>ArrowLeft</code>, <code>ArrowRight</code><br><b>Tip:</b> After a <code>fill</code> step, <code>Enter</code> can submit a form.',
             ],
             'assertVisible' => [
-                'label' => 'Assert Visible', 'hasSelector' => true, 'hasValue' => false,
+                'label' => Craft::t('synmon', 'Assert Visible'), 'hasSelector' => true, 'hasValue' => false,
                 'selectorPlaceholder' => '.success-message',
-                'hint' => 'Prüft ob ein Element sichtbar ist. Schlägt fehl wenn es nicht existiert oder per CSS versteckt ist.<br><b>Beispiele:</b><br>• <code>.success-message</code> → Erfolgsmeldung nach Formular-Submit<br>• <code>#cookie-banner</code> → Cookie-Banner sichtbar<br>• <code>.product-grid .item</code> → Mind. ein Produkt vorhanden<br><b>Tipp:</b> Nützlich um nach Klick/Submit zu prüfen ob eine Meldung oder ein Bereich erscheint' . $selectorTips,
+                'hint' => 'Checks if an element is visible. Fails if it does not exist or is hidden via CSS.<br><b>Examples:</b><br>• <code>.success-message</code> → success message after form submit<br>• <code>#cookie-banner</code> → cookie banner visible<br>• <code>.product-grid .item</code> → at least one product present<br><b>Tip:</b> Useful to verify a message or section appears after click/submit' . $selectorTips,
             ],
             'assertText' => [
-                'label' => 'Assert Text', 'hasSelector' => true, 'hasValue' => true,
-                'selectorPlaceholder' => '.success-message, h1, #ausgabe',
-                'valuePlaceholder' => 'Vielen Dank (Teilstring reicht)',
-                'hint' => 'Wartet bis ein Element den erwarteten Text enthält (prüft alle 250ms bis Timeout, inkl. Shadow DOM).<br><b>Selector:</b> Bei mehreren Treffern reicht es wenn <i>irgendein</i> Element den Text enthält<br><b>Wert:</b> Gesuchter Textinhalt (Teilstring, Groß-/Kleinschreibung beachten)<br><b>Beispiele:</b><br>• <code>.fui-alert</code> → Freeform Erfolgs-/Fehlermeldung<br>• <code>h1</code> → Seitenüberschrift<br>• <code>.message:last-child p</code> → letzter Paragraph der letzten Message<br>• <code>.message p:nth-of-type(2)</code> → genau der 2. Paragraph<br><b>⚠️ Wenn "Text auf Seite sichtbar aber nicht gefunden":</b> Selector zu eng → breiter wählen, z.B. <code>.message</code> statt <code>.message span</code>' . $selectorTips,
+                'label' => Craft::t('synmon', 'Assert Text'), 'hasSelector' => true, 'hasValue' => true,
+                'selectorPlaceholder' => '.success-message, h1, #output',
+                'valuePlaceholder' => 'Thank you (substring is enough)',
+                'hint' => 'Waits until an element contains the expected text (polls every 250ms until timeout, incl. Shadow DOM).<br><b>Selector:</b> If multiple elements match, it passes if <i>any</i> of them contains the text<br><b>Value:</b> Text to find (substring, case-sensitive)<br><b>Examples:</b><br>• <code>.fui-alert</code> → Freeform success/error message<br>• <code>h1</code> → page heading<br>• <code>.message:last-child p</code> → last paragraph of the last message<br>• <code>.message p:nth-of-type(2)</code> → exactly the 2nd paragraph<br><b>⚠️ If "text visible on page but not found":</b> Selector too narrow → broaden it, e.g. <code>.message</code> instead of <code>.message span</code>' . $selectorTips,
             ],
             'assertUrl' => [
-                'label' => 'Assert URL', 'hasSelector' => false, 'hasValue' => true,
-                'valuePlaceholder' => '/danke oder ?success=1',
-                'hint' => 'Prüft ob die aktuelle Seiten-URL einen bestimmten Text enthält.<br><b>Wert:</b> Gesuchter URL-Substring<br><b>Beispiele:</b><br>• <code>/danke</code> → Weiterleitung nach Formular-Submit<br>• <code>/success</code> → Erfolgsseite<br>• <code>?status=ok</code> → Query-Parameter<br>• <code>amr-eventtechnik.de/kontakt</code> → Exakte Domain + Pfad',
+                'label' => Craft::t('synmon', 'Assert URL'), 'hasSelector' => false, 'hasValue' => true,
+                'valuePlaceholder' => '/thank-you or ?success=1',
+                'hint' => 'Checks if the current page URL contains a specific string.<br><b>Value:</b> URL substring to find<br><b>Examples:</b><br>• <code>/thank-you</code> → redirect after form submit<br>• <code>/success</code> → success page<br>• <code>?status=ok</code> → query parameter<br>• <code>example.com/contact</code> → exact domain + path',
             ],
             'assertTitle' => [
-                'label' => 'Assert Title', 'hasSelector' => false, 'hasValue' => true,
-                'valuePlaceholder' => 'Kontakt – AMR Eventtechnik',
-                'hint' => 'Prüft ob der <code>&lt;title&gt;</code>-Tag der Seite einen bestimmten Text enthält.<br><b>Wert:</b> Gesuchter Teilstring des Seitentitels<br><b>Tipp:</b> Nützlich um sicherzustellen dass die richtige Seite geladen wurde.',
+                'label' => Craft::t('synmon', 'Assert Title'), 'hasSelector' => false, 'hasValue' => true,
+                'valuePlaceholder' => 'Contact – My Website',
+                'hint' => 'Checks if the <code>&lt;title&gt;</code> tag of the page contains a specific string.<br><b>Value:</b> Substring of the page title to find<br><b>Tip:</b> Useful to verify the correct page was loaded.',
             ],
             'waitForSelector' => [
-                'label' => 'Wait for Selector', 'hasSelector' => true, 'hasValue' => false,
+                'label' => Craft::t('synmon', 'Wait for Selector'), 'hasSelector' => true, 'hasValue' => false,
                 'selectorPlaceholder' => '.search-results, #chat-widget',
-                'hint' => 'Wartet bis ein Element im DOM erscheint und sichtbar ist.<br><b>Beispiele:</b><br>• <code>.search-results</code> → Suchergebnisse nach AJAX-Laden<br>• <code>#chat-widget</code> → Widget erscheint nach Verzögerung<br>• <code>.fui-form</code> → Freeform Formular geladen<br><b>Tipp:</b> Timeout erhöhen wenn Inhalte lange zum Laden brauchen' . $selectorTips,
+                'hint' => 'Waits until an element appears in the DOM and is visible.<br><b>Examples:</b><br>• <code>.search-results</code> → results after AJAX load<br>• <code>#chat-widget</code> → widget appears after delay<br>• <code>.fui-form</code> → Freeform form loaded<br><b>Tip:</b> Increase timeout for content that takes long to load' . $selectorTips,
             ],
             'assertNotVisible' => [
-                'label' => 'Assert Not Visible', 'hasSelector' => true, 'hasValue' => false,
+                'label' => Craft::t('synmon', 'Assert Not Visible'), 'hasSelector' => true, 'hasValue' => false,
                 'selectorPlaceholder' => '.modal, #cookie-banner, .spinner',
-                'hint' => 'Prüft ob ein Element <b>nicht sichtbar</b> ist oder aus dem DOM entfernt wurde.<br><b>Beispiele:</b><br>• <code>.modal</code> → Modal wurde geschlossen<br>• <code>#cookie-banner</code> → Banner nach Akzeptieren weg<br>• <code>.loading-spinner</code> → Ladeanimation beendet<br>• <code>.error-message</code> → Kein Fehler vorhanden' . $selectorTips,
+                'hint' => 'Checks if an element is <b>not visible</b> or has been removed from the DOM.<br><b>Examples:</b><br>• <code>.modal</code> → modal was closed<br>• <code>#cookie-banner</code> → banner gone after accepting<br>• <code>.loading-spinner</code> → loading animation finished<br>• <code>.error-message</code> → no error present' . $selectorTips,
             ],
             'hover' => [
-                'label' => 'Hover', 'hasSelector' => true, 'hasValue' => false,
+                'label' => Craft::t('synmon', 'Hover'), 'hasSelector' => true, 'hasValue' => false,
                 'selectorPlaceholder' => 'nav .has-dropdown',
-                'hint' => 'Bewegt die Maus über ein Element (Hover-Effekt).<br><b>Beispiele:</b><br>• <code>nav .has-dropdown</code> → Dropdown-Navigation öffnen<br>• <code>.product-card:first-child</code> → Hover auf erstes Produkt<br>• <code>[data-tooltip]</code> → Tooltip-Element<br><b>Tipp:</b> Nach Hover direkt <code>waitForSelector</code> für das erscheinende Element setzen' . $selectorTips,
+                'hint' => 'Moves the mouse over an element (hover effect).<br><b>Examples:</b><br>• <code>nav .has-dropdown</code> → open dropdown navigation<br>• <code>.product-card:first-child</code> → hover on first product<br>• <code>[data-tooltip]</code> → tooltip element<br><b>Tip:</b> After hover, immediately add <code>waitForSelector</code> for the appearing element' . $selectorTips,
             ],
             'scroll' => [
-                'label' => 'Scroll', 'hasSelector' => true, 'hasValue' => true,
-                'selectorPlaceholder' => '#kontakt-formular (optional)',
-                'valuePlaceholder' => '500 (Pixel, negativ = hoch)',
-                'hint' => 'Scrollt die Seite oder bringt ein Element in den Sichtbereich.<br><b>Selector (optional):</b> Element das in den Sichtbereich gescrollt werden soll<br><b>Wert (ohne Selector):</b> Pixel, z.B. <code>500</code> (runter), <code>-200</code> (hoch)<br><b>Beispiele:</b><br>• Selector <code>#kontakt-formular</code> → scrollt zum Formular<br>• Selector <code>footer</code> → scrollt zum Footer<br>• Nur Wert <code>800</code> → scrollt 800px nach unten<br><b>Tipp:</b> Lazy-loaded Bilder/Inhalte werden erst nach dem Scrollen geladen' . $selectorTips,
+                'label' => Craft::t('synmon', 'Scroll'), 'hasSelector' => true, 'hasValue' => true,
+                'selectorPlaceholder' => '#contact-form (optional)',
+                'valuePlaceholder' => '500 (pixels, negative = up)',
+                'hint' => 'Scrolls the page or brings an element into view.<br><b>Selector (optional):</b> Element to scroll into view<br><b>Value (without selector):</b> Pixels, e.g. <code>500</code> (down), <code>-200</code> (up)<br><b>Examples:</b><br>• Selector <code>#contact-form</code> → scrolls to the form<br>• Selector <code>footer</code> → scrolls to the footer<br>• Value only <code>800</code> → scrolls 800px down<br><b>Tip:</b> Lazy-loaded images/content only load after scrolling' . $selectorTips,
             ],
             'waitMs' => [
-                'label' => 'Wait (ms)', 'hasSelector' => false, 'hasValue' => true,
+                'label' => Craft::t('synmon', 'Wait (ms)'), 'hasSelector' => false, 'hasValue' => true,
                 'valuePlaceholder' => '1000',
-                'hint' => 'Wartet eine feste Anzahl Millisekunden.<br><b>Wert:</b> Wartezeit in ms, z.B. <code>500</code> = 0,5s · <code>1000</code> = 1s · <code>3000</code> = 3s<br><b>⚠️ Tipp:</b> Möglichst <code>waitForSelector</code> oder <code>assertText</code> bevorzugen – feste Wartezeiten sind fragil bei wechselnder Servergeschwindigkeit.',
+                'hint' => 'Waits a fixed number of milliseconds.<br><b>Value:</b> Wait time in ms, e.g. <code>500</code> = 0.5s · <code>1000</code> = 1s · <code>3000</code> = 3s<br><b>⚠️ Tip:</b> Prefer <code>waitForSelector</code> or <code>assertText</code> where possible – fixed waits are fragile under varying server speeds.',
             ],
             'assertCount' => [
-                'label' => 'Assert Count', 'hasSelector' => true, 'hasValue' => true,
+                'label' => Craft::t('synmon', 'Assert Count'), 'hasSelector' => true, 'hasValue' => true,
                 'selectorPlaceholder' => '.product-card, li.result',
                 'valuePlaceholder' => '3',
-                'hint' => 'Prüft ob genau N Elemente dem Selector entsprechen.<br><b>Selector:</b> CSS-Selector<br><b>Wert:</b> Erwartete Anzahl (exakt)<br><b>Beispiele:</b><br>• <code>.nav-item</code> + <code>5</code> → genau 5 Navigationspunkte<br>• <code>.product-card</code> + <code>12</code> → 12 Produkte geladen<br>• <code>table tbody tr</code> + <code>10</code> → 10 Tabellenzeilen' . $selectorTips,
+                'hint' => 'Checks if exactly N elements match the selector.<br><b>Selector:</b> CSS selector<br><b>Value:</b> Expected count (exact)<br><b>Examples:</b><br>• <code>.nav-item</code> + <code>5</code> → exactly 5 navigation items<br>• <code>.product-card</code> + <code>12</code> → 12 products loaded<br>• <code>table tbody tr</code> + <code>10</code> → 10 table rows' . $selectorTips,
             ],
             'check' => [
-                'label' => 'Checkbox aktivieren', 'hasSelector' => true, 'hasValue' => false,
-                'selectorPlaceholder' => 'input[name="fields[agb]"]',
-                'hint' => 'Setzt eine Checkbox oder Radio-Button auf <b>aktiviert</b> (funktioniert auch bei styled Checkboxen mit Label-Overlay).<br><b>Beispiele:</b><br>• <code>input[name="fields[agb]"]</code> → AGB-Checkbox (Craft Freeform)<br>• <code>input[name="fields[technik][]"][value="Audiotechnik"]</code> → Checkbox-Gruppe mit Wert<br>• <code>input[type="radio"][value="ja"]</code> → Radio-Button<br>• <code>[data-fui-id*="newsletter"]</code> → Element mit dynamischer ID (enthält "newsletter")' . $selectorTips,
+                'label' => Craft::t('synmon', 'Check Checkbox'), 'hasSelector' => true, 'hasValue' => false,
+                'selectorPlaceholder' => 'input[name="fields[terms]"]',
+                'hint' => 'Sets a checkbox or radio button to <b>checked</b> (works with styled checkboxes that have a label overlay).<br><b>Examples:</b><br>• <code>input[name="fields[terms]"]</code> → terms checkbox (Craft Freeform)<br>• <code>input[name="fields[tech][]"][value="Audio"]</code> → checkbox group with value<br>• <code>input[type="radio"][value="yes"]</code> → radio button<br>• <code>[data-fui-id*="newsletter"]</code> → element with dynamic ID (contains "newsletter")' . $selectorTips,
             ],
             'uncheck' => [
-                'label' => 'Checkbox deaktivieren', 'hasSelector' => true, 'hasValue' => false,
+                'label' => Craft::t('synmon', 'Uncheck Checkbox'), 'hasSelector' => true, 'hasValue' => false,
                 'selectorPlaceholder' => 'input[name="fields[newsletter]"]',
-                'hint' => 'Setzt eine Checkbox auf <b>deaktiviert</b>.<br><b>Beispiele:</b><br>• <code>input[name="fields[newsletter]"]</code> → Newsletter-Opt-in<br>• <code>input[name="fields[technik][]"][value="Audiotechnik"]</code> → Checkbox-Gruppe mit Wert' . $selectorTips,
+                'hint' => 'Sets a checkbox to <b>unchecked</b>.<br><b>Examples:</b><br>• <code>input[name="fields[newsletter]"]</code> → newsletter opt-in<br>• <code>input[name="fields[tech][]"][value="Audio"]</code> → checkbox group with value' . $selectorTips,
             ],
         ];
     }

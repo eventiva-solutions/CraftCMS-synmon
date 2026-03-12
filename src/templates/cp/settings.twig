@@ -1,23 +1,23 @@
 {% extends '_layouts/cp' %}
 {% do view.registerAssetBundle('eventiva\\synmon\\assetbundles\\SynMonAssetBundle') %}
 
-{% set title = 'SynMon Einstellungen' %}
+{% set title = 'SynMon Settings'|t('synmon') %}
 {% set selectedSubnavItem = 'settings' %}
 
 {% block content %}
 
 {% if not nodeAvailable %}
 <div class="synmon-playwright-setup">
-    <strong>⚠ Node.js nicht gefunden!</strong>
-    Stelle sicher, dass Node.js installiert ist und der Pfad zur node-Binary korrekt ist.
+    <strong>{{ '⚠ Node.js not found!'|t('synmon') }}</strong>
+    {{ 'Make sure Node.js is installed and the path to the node binary is correct.'|t('synmon') }}
 </div>
 {% endif %}
 
 {% if nodeAvailable and not pwAvailable %}
 <div class="synmon-playwright-setup">
-    <strong>⚠ Playwright nicht installiert!</strong>
-    Playwright wird beim ersten Test-Run automatisch installiert. Starte einfach einen Test – die Installation läuft im Hintergrund.<br>
-    Falls die automatische Installation fehlschlägt, führe folgende Befehle manuell aus:
+    <strong>{{ '⚠ Playwright not installed!'|t('synmon') }}</strong>
+    {{ 'Playwright will be automatically installed on the first test run. Just start a test – installation runs in the background.'|t('synmon') }}<br>
+    {{ 'If automatic installation fails, run the following commands manually:'|t('synmon') }}
     <code>cd {{ craft.app.path.basePath }}/plugins/synmon/src/node
 npm install
 npx playwright install chromium</code>
@@ -26,7 +26,7 @@ npx playwright install chromium</code>
 
 {% if nodeAvailable and pwAvailable %}
 <div style="background:#d4edda;border:1px solid #28a745;border-radius:6px;padding:12px;margin-bottom:16px">
-    ✅ Node.js und Playwright sind einsatzbereit.
+    {{ '✅ Node.js and Playwright are ready.'|t('synmon') }}
 </div>
 {% endif %}
 
@@ -34,28 +34,28 @@ npx playwright install chromium</code>
     {{ csrfInput() }}
 
     <div class="field">
-        <div class="heading"><label>Node.js Binary</label>
-            <div class="instructions"><p>Pfad zur node-Binary (Standard: <code>node</code>)</p></div>
+        <div class="heading"><label>{{ 'Node.js Binary'|t('synmon') }}</label>
+            <div class="instructions"><p>{{ 'Path to node binary (default: node)'|t('synmon') }}</p></div>
         </div>
         <div class="input"><input type="text" name="nodeBinary" class="text" style="width:300px"
             value="{{ settings.nodeBinary ?? 'node' }}"></div>
     </div>
 
     <div class="field">
-        <div class="heading"><label>Standard Step-Timeout (ms)</label></div>
+        <div class="heading"><label>{{ 'Default Step Timeout (ms)'|t('synmon') }}</label></div>
         <div class="input"><input type="number" name="defaultTimeout" class="text" style="width:150px"
             value="{{ settings.defaultTimeout ?? 30000 }}"></div>
     </div>
 
     <div class="field">
-        <div class="heading"><label>Globaler Suite-Timeout (Sekunden)</label></div>
+        <div class="heading"><label>{{ 'Global Suite Timeout (seconds)'|t('synmon') }}</label></div>
         <div class="input"><input type="number" name="globalTimeout" class="text" style="width:150px"
             value="{{ settings.globalTimeout ?? 120 }}"></div>
     </div>
 
     <div class="field">
-        <div class="heading"><label>Run-Aufbewahrungsdauer (Tage)</label>
-            <div class="instructions"><p>Ältere Runs werden beim nächsten Cron-Lauf gelöscht.</p></div>
+        <div class="heading"><label>{{ 'Run Retention (days)'|t('synmon') }}</label>
+            <div class="instructions"><p>{{ 'Older runs are deleted on the next cron run.'|t('synmon') }}</p></div>
         </div>
         <div class="input"><input type="number" name="runRetentionDays" class="text" style="width:150px"
             value="{{ settings.runRetentionDays ?? 30 }}"></div>
@@ -64,31 +64,31 @@ npx playwright install chromium</code>
     <div class="field">
         <div class="heading"><label>
             <input type="checkbox" name="enabled" value="1" {{ settings.enabled ?? true ? 'checked' : '' }}>
-            SynMon global aktiviert
+            {{ 'SynMon globally enabled'|t('synmon') }}
         </label></div>
     </div>
 
     <hr>
-    <h2>Cron-Setup</h2>
-    <p>Beide Einträge müssen im Server-Crontab hinterlegt sein (<code>crontab -e</code>):</p>
+    <h2>{{ 'Cron Setup'|t('synmon') }}</h2>
+    <p>{{ 'Both entries must be added to the server crontab (crontab -e):'|t('synmon') }}</p>
 
     <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:10px 14px;margin-bottom:12px;font-size:13px">
-        ⚠️ <strong>Pfad anpassen!</strong> Ersetze <code>/var/www/craft</code> durch den tatsächlichen Pfad zur <code>craft</code>-Datei auf deinem Server.<br>
-        Pfad ermitteln: <code>find /var/www -name "craft" -type f</code>
+        ⚠️ <strong>{{ '⚠️ Adjust path! Replace /var/www/craft with the actual path to the craft file on your server.'|t('synmon') }}</strong><br>
+        {{ 'Find path:'|t('synmon') }} <code>find /var/www -name "craft" -type f</code>
     </div>
 
     <div class="synmon-playwright-setup" style="background:#f3f4f6;border-color:#d1d5db">
         <div style="margin-bottom:6px">
-            <span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px"># 1. SynMon: fällige Suites in die Queue einreihen</span>
+            <span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px"># 1. SynMon: queue due suites</span>
             <code>* * * * * /usr/bin/php /var/www/craft synmon/run >> /var/log/synmon.log 2>&1</code>
         </div>
         <div>
-            <span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px"># 2. Craft Queue: Jobs verarbeiten (ohne diesen Eintrag laufen keine Tests!)</span>
+            <span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px"># 2. Craft Queue: process jobs (without this entry no tests will run!)</span>
             <code>* * * * * /usr/bin/php /var/www/craft queue/run >> /dev/null 2>&1</code>
         </div>
     </div>
 
-    <button type="submit" formaction="{{ cpUrl('synmon/settings/save') }}" class="btn submit">Einstellungen speichern</button>
+    <button type="submit" formaction="{{ cpUrl('synmon/settings/save') }}" class="btn submit">{{ 'Save Settings'|t('synmon') }}</button>
 </form>
 
 {% endblock %}

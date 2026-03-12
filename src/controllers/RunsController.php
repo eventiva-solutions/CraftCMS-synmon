@@ -30,7 +30,7 @@ class RunsController extends Controller
         $data = SynMon::getInstance()->getResultService()->getRuns($page, 20, $suiteId, $status);
 
         return $this->renderTemplate('synmon/cp/runs/index', [
-            'title'      => 'Run History',
+            'title'      => Craft::t('synmon', 'Run History'),
             'runs'       => $data['runs'],
             'total'      => $data['total'],
             'page'       => $data['page'],
@@ -61,7 +61,7 @@ class RunsController extends Controller
         unset($log);
 
         return $this->renderTemplate('synmon/cp/runs/_detail', [
-            'title' => 'Run #' . $id . ' – ' . ($run['suiteName'] ?? ''),
+            'title' => 'Run #' . $id . ' – ' . ($run['suiteName'] ?? ''),  // Run # prefix is intentionally not translated
             'run'   => $run,
         ]);
     }
@@ -73,7 +73,7 @@ class RunsController extends Controller
 
         $this->deleteRunScreenshots($id);
         Craft::$app->getDb()->createCommand()->delete('{{%synmon_runs}}', ['id' => $id])->execute();
-        Craft::$app->getSession()->setNotice('Run gelöscht.');
+        Craft::$app->getSession()->setNotice(Craft::t('synmon', 'Run deleted.'));
         return $this->redirect('synmon/runs');
     }
 
@@ -109,7 +109,7 @@ class RunsController extends Controller
             return $this->asJson(['success' => true, 'deleted' => $deleted]);
         }
 
-        Craft::$app->getSession()->setNotice("{$deleted} Runs gelöscht.");
+        Craft::$app->getSession()->setNotice(Craft::t('synmon', '{count} runs deleted.', ['count' => $deleted]));
         return $this->redirect('synmon/runs');
     }
 
@@ -133,7 +133,7 @@ class RunsController extends Controller
 
         Craft::$app->getDb()->createCommand()->update('{{%synmon_runs}}', [
             'status'       => 'cancelled',
-            'errorMessage' => 'Manuell abgebrochen.',
+            'errorMessage' => Craft::t('synmon', 'Manually cancelled.'),
             'dateUpdated'  => (new \DateTime())->format('Y-m-d H:i:s'),
         ], ['id' => $id])->execute();
 

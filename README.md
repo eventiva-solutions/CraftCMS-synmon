@@ -1,4 +1,4 @@
-# SynMon – Synthetic Monitoring for Craft CMS
+# SynMon - Synthetic Monitoring for Craft CMS
 
 E2E browser tests directly from the Craft Control Panel. Configurable test suites run headless via Playwright (Node.js), execute automatically on a cron schedule, and store step-by-step logs with screenshots. Failure notifications are sent via email and/or webhook.
 
@@ -6,14 +6,14 @@ E2E browser tests directly from the Craft Control Panel. Configurable test suite
 
 ## Features
 
-- **Step Editor** – Navigate, Click, Fill, Select, Hover, Scroll, Assert, Wait and more
-- **Live Testing** – Cypress-like live view with real-time browser screenshots per step
-- **Network Console** – XHR/Fetch requests with status codes visible in a live network tab
-- **Cron Scheduler** – Visual builder for scheduling (weekdays, month days, times)
-- **Run History** – Complete log of all test runs; screenshots viewable per step click
-- **Suite Management** – Clone, JSON export and import of test suites
-- **Notifications** – Email and webhook (Slack etc.) on failure or success
-- **Auto-Setup** – Playwright + Chromium are installed automatically on the first run
+- **Step Editor** - Navigate, Click, Fill, Select, Hover, Scroll, Assert, Wait and more
+- **Live Testing** - Cypress-like live view with real-time browser screenshots per step
+- **Network Console** - XHR/Fetch requests with status codes visible in a live network tab
+- **Cron Scheduler** - Visual builder for scheduling (weekdays, month days, times)
+- **Run History** - Complete log of all test runs; screenshots viewable per step click
+- **Suite Management** - Clone, JSON export and import of test suites
+- **Notifications** - Email and webhook (Slack etc.) on failure or success
+- **Auto-Setup** - Playwright + Chromium are installed automatically on the first run
 
 ---
 
@@ -133,23 +133,23 @@ The queue also needs a cron entry (if not already configured):
 
 ### Running tests manually
 
-- **▶ Run now** – queues the suite as a Craft Queue job, runs in the background
-- **🎬 Live test** – opens the live view with real-time screenshots and step log
+- **▶ Run now** - queues the suite as a Craft Queue job, runs in the background
+- **🎬 Live test** - opens the live view with real-time screenshots and step log
 
 ### Suite Management
 
-- **⎘ Clone** – duplicates a suite with all its steps (created as disabled)
-- **⬇ Export** – downloads the suite as a JSON file
-- **⬆ Import** – imports a JSON file as a new suite (created as disabled)
+- **⎘ Clone** - duplicates a suite with all its steps (created as disabled)
+- **⬇ Export** - downloads the suite as a JSON file
+- **⬆ Import** - imports a JSON file as a new suite (created as disabled)
 
 ### Live Testing
 
 The live view shows:
-- **Step editor** – editable before starting the test
-- **Browser preview** – screenshot after every step
-- **Protocol tab** – step log with clickable entries (click → shows screenshot for that step)
-- **Network tab** – all XHR/Fetch requests with method and HTTP status code
-- **URL bar** – displays the current page URL
+- **Step editor** - editable before starting the test
+- **Browser preview** - screenshot after every step
+- **Protocol tab** - step log with clickable entries (click → shows screenshot for that step)
+- **Network tab** - all XHR/Fetch requests with method and HTTP status code
+- **URL bar** - displays the current page URL
 
 Screenshots are also viewable in the Run Detail page (history) for runs executed in live mode.
 
@@ -159,31 +159,31 @@ Screenshots are also viewable in the Run Detail page (history) for runs executed
 
 | Type | Description | Selector | Value |
 |---|---|---|---|
-| `navigate` | Navigate to a URL | – | URL |
-| `click` | Click an element | CSS selector | – |
+| `navigate` | Navigate to a URL | - | URL |
+| `click` | Click an element | CSS selector | - |
 | `fill` | Fill an input field | CSS selector | Text |
 | `select` | Choose a dropdown option | CSS selector | Option value |
-| `pressKey` | Press a keyboard key | – | e.g. `Enter` |
-| `hover` | Move mouse over element (dropdowns, tooltips) | CSS selector | – |
+| `pressKey` | Press a keyboard key | - | e.g. `Enter` |
+| `hover` | Move mouse over element (dropdowns, tooltips) | CSS selector | - |
 | `scroll` | Scroll page or bring element into view | CSS selector (optional) | Pixels (optional, e.g. `500`) |
-| `waitMs` | Fixed pause | – | Milliseconds |
-| `assertVisible` | Assert element is visible | CSS selector | – |
-| `assertNotVisible` | Assert element is hidden or removed | CSS selector | – |
-| `assertText` | Assert element contains text – polls until timeout, pierces Shadow DOM | CSS selector | Expected text |
+| `waitMs` | Fixed pause | - | Milliseconds |
+| `assertVisible` | Assert element is visible | CSS selector | - |
+| `assertNotVisible` | Assert element is hidden or removed | CSS selector | - |
+| `assertText` | Assert element contains text - polls until timeout, pierces Shadow DOM | CSS selector | Expected text |
 | `assertCount` | Assert exactly N elements match the selector | CSS selector | Number |
-| `assertUrl` | Assert URL contains a substring | – | URL part |
-| `assertTitle` | Assert page title contains a substring | – | Title part |
-| `waitForSelector` | Wait until element appears | CSS selector | – |
+| `assertUrl` | Assert URL contains a substring | - | URL part |
+| `assertTitle` | Assert page title contains a substring | - | Title part |
+| `waitForSelector` | Wait until element appears | CSS selector | - |
 
-### assertText – Selector tips
+### assertText - Selector tips
 
 `assertText` searches all elements matching the selector, including Shadow DOM (web components). Useful selectors:
 
-- `.message p` – all `<p>` inside elements with class `message`
-- `.message p:last-of-type` – last paragraph in a message
-- `.message p:nth-of-type(2)` – exactly the second paragraph
-- `.message:last-child p` – all `<p>` in the last message (e.g. latest bot response)
-- `.message` – entire content (broad selector, finds text in all child elements)
+- `.message p` - all `<p>` inside elements with class `message`
+- `.message p:last-of-type` - last paragraph in a message
+- `.message p:nth-of-type(2)` - exactly the second paragraph
+- `.message:last-child p` - all `<p>` in the last message (e.g. latest bot response)
+- `.message` - entire content (broad selector, finds text in all child elements)
 
 When the timeout is exceeded, the error message indicates whether the text exists on the page but the selector is too narrow.
 
@@ -204,10 +204,10 @@ When the timeout is exceeded, the error message indicates whether the text exist
 
 The plugin creates the following tables automatically on the first request:
 
-- `synmon_suites` – test suites
-- `synmon_steps` – steps belonging to a suite
-- `synmon_runs` – execution history
-- `synmon_step_logs` – step-by-step logs including screenshots
+- `synmon_suites` - test suites
+- `synmon_steps` - steps belonging to a suite
+- `synmon_runs` - execution history
+- `synmon_step_logs` - step-by-step logs including screenshots
 
 Screenshots are stored as JPEG files under `storage/synmon-screenshots/{runId}/` and are deleted automatically when a run is removed.
 

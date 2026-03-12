@@ -36,7 +36,7 @@ class SuitesController extends Controller
         }
 
         return $this->renderTemplate('synmon/cp/suites/index', [
-            'title'    => 'Test Suites',
+            'title'    => Craft::t('synmon', 'Test Suites'),
             'suites'   => $suites,
             'nextRuns' => $nextRuns,
         ]);
@@ -45,7 +45,7 @@ class SuitesController extends Controller
     public function actionNew(): \yii\web\Response
     {
         return $this->renderTemplate('synmon/cp/suites/_edit', [
-            'title'     => 'Neue Suite',
+            'title'     => Craft::t('synmon', 'New Suite'),
             'suite'     => null,
             'steps'     => [],
             'stepTypes' => SynMon::getInstance()->getSuiteService()->getStepTypes(),
@@ -62,7 +62,7 @@ class SuitesController extends Controller
         $steps = SynMon::getInstance()->getSuiteService()->getStepsBySuiteId($id);
 
         return $this->renderTemplate('synmon/cp/suites/_edit', [
-            'title'     => 'Suite bearbeiten: ' . $suite['name'],
+            'title'     => Craft::t('synmon', 'Edit Suite: {name}', ['name' => $suite['name']]),
             'suite'     => $suite,
             'steps'     => $steps,
             'stepTypes' => SynMon::getInstance()->getSuiteService()->getStepTypes(),
@@ -79,7 +79,7 @@ class SuitesController extends Controller
         $steps = SynMon::getInstance()->getSuiteService()->getStepsBySuiteId($id);
 
         return $this->renderTemplate('synmon/cp/suites/_live', [
-            'title'     => 'Live Test: ' . $suite['name'],
+            'title'     => Craft::t('synmon', 'Live Test: {name}', ['name' => $suite['name']]),
             'suite'     => $suite,
             'steps'     => $steps,
             'stepTypes' => SynMon::getInstance()->getSuiteService()->getStepTypes(),
@@ -114,11 +114,11 @@ class SuitesController extends Controller
 
         if ($success) {
             SynMon::getInstance()->getSuiteService()->saveSteps((int)$suiteId, is_array($steps) ? $steps : []);
-            Craft::$app->getSession()->setNotice('Suite gespeichert.');
+            Craft::$app->getSession()->setNotice(Craft::t('synmon', 'Suite saved.'));
             return $this->redirect('synmon/suites/' . $suiteId);
         }
 
-        Craft::$app->getSession()->setError('Fehler beim Speichern.');
+        Craft::$app->getSession()->setError(Craft::t('synmon', 'Error saving suite.'));
         return $this->redirect('synmon/suites');
     }
 
@@ -154,7 +154,7 @@ class SuitesController extends Controller
             }
 
             if (!$success) {
-                return $this->asJson(['success' => false, 'error' => 'Fehler beim Speichern.']);
+                return $this->asJson(['success' => false, 'error' => Craft::t('synmon', 'Error saving suite.')]);
             }
 
             SynMon::getInstance()->getSuiteService()->saveSteps((int)$suiteId, is_array($steps) ? $steps : []);
@@ -171,7 +171,7 @@ class SuitesController extends Controller
         $id = (int)Craft::$app->getRequest()->getRequiredBodyParam('suiteId');
 
         SynMon::getInstance()->getSuiteService()->deleteSuite($id);
-        Craft::$app->getSession()->setNotice('Suite gelöscht.');
+        Craft::$app->getSession()->setNotice(Craft::t('synmon', 'Suite deleted.'));
         return $this->redirect('synmon/suites');
     }
 
@@ -188,12 +188,12 @@ class SuitesController extends Controller
         if (Craft::$app->getRequest()->getAcceptsJson()) {
             return $this->asJson([
                 'success'  => true,
-                'message'  => 'Suite in Queue eingereiht.',
+                'message'  => Craft::t('synmon', 'Suite queued – Craft will process the job automatically.'),
                 'runsUrl'  => \craft\helpers\UrlHelper::cpUrl('synmon/runs'),
             ]);
         }
 
-        Craft::$app->getSession()->setNotice('Suite in Queue eingereiht.');
+        Craft::$app->getSession()->setNotice(Craft::t('synmon', 'Suite queued.'));
         return $this->redirect('synmon/runs');
     }
 
@@ -223,7 +223,7 @@ class SuitesController extends Controller
         try {
             if (!$runRecord->save()) {
                 $errors = $runRecord->getErrors();
-                return $this->asJson(['success' => false, 'error' => 'Run konnte nicht erstellt werden: ' . json_encode($errors)]);
+                return $this->asJson(['success' => false, 'error' => Craft::t('synmon', 'Could not create run: {errors}', ['errors' => json_encode($errors)])]);
             }
         } catch (\Throwable $e) {
             return $this->asJson(['success' => false, 'error' => $e->getMessage()]);
@@ -250,11 +250,11 @@ class SuitesController extends Controller
         $newId = SynMon::getInstance()->getSuiteService()->cloneSuite($id);
 
         if (!$newId) {
-            Craft::$app->getSession()->setError('Klonen fehlgeschlagen.');
+            Craft::$app->getSession()->setError(Craft::t('synmon', 'Clone failed.'));
             return $this->redirect('synmon/suites');
         }
 
-        Craft::$app->getSession()->setNotice('Suite geklont (deaktiviert).');
+        Craft::$app->getSession()->setNotice(Craft::t('synmon', 'Suite cloned (disabled).'));
         return $this->redirect('synmon/suites/' . $newId);
     }
 
@@ -305,7 +305,7 @@ class SuitesController extends Controller
 
         $file = $_FILES['importFile'] ?? null;
         if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
-            Craft::$app->getSession()->setError('Keine Datei hochgeladen.');
+            Craft::$app->getSession()->setError(Craft::t('synmon', 'No file uploaded.'));
             return $this->redirect('synmon/suites');
         }
 
@@ -313,7 +313,7 @@ class SuitesController extends Controller
         $data    = json_decode($json, true);
 
         if (!$data || empty($data['synmonExport']) || empty($data['suite'])) {
-            Craft::$app->getSession()->setError('Ungültige Export-Datei.');
+            Craft::$app->getSession()->setError(Craft::t('synmon', 'Invalid export file.'));
             return $this->redirect('synmon/suites');
         }
 
@@ -323,14 +323,14 @@ class SuitesController extends Controller
         $suiteId = SynMon::getInstance()->getSuiteService()->createSuite($suiteData);
 
         if (!$suiteId) {
-            Craft::$app->getSession()->setError('Import fehlgeschlagen.');
+            Craft::$app->getSession()->setError(Craft::t('synmon', 'Import failed.'));
             return $this->redirect('synmon/suites');
         }
 
         $steps = $data['steps'] ?? [];
         SynMon::getInstance()->getSuiteService()->saveSteps($suiteId, $steps);
 
-        Craft::$app->getSession()->setNotice('Suite importiert (deaktiviert).');
+        Craft::$app->getSession()->setNotice(Craft::t('synmon', 'Suite imported (disabled).'));
         return $this->redirect('synmon/suites/' . $suiteId);
     }
 

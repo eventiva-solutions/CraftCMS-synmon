@@ -34,8 +34,8 @@ class NotificationService extends Component
     {
         try {
             $subject = $context['status'] === 'pass'
-                ? '[SynMon] ✅ Suite passed: ' . $suite['name']
-                : '[SynMon] ❌ Suite failed: ' . $suite['name'];
+                ? Craft::t('synmon', '[SynMon] ✅ Suite passed: {name}', ['name' => $suite['name']])
+                : Craft::t('synmon', '[SynMon] ❌ Suite failed: {name}', ['name' => $suite['name']]);
 
             $body = $this->buildEmailBody($context);
 
@@ -74,24 +74,24 @@ class NotificationService extends Component
         $runId     = $context['runId'];
         $icon      = $status === 'pass' ? '✅' : '❌';
 
-        $html  = "<h2>{$icon} SynMon: Suite {$status}</h2>";
-        $html .= "<p><strong>Suite:</strong> " . htmlspecialchars($suite['name']) . "</p>";
-        $html .= "<p><strong>Status:</strong> " . strtoupper($status) . "</p>";
-        $html .= "<p><strong>Run ID:</strong> #{$runId}</p>";
-        $html .= "<p><strong>Zeit:</strong> " . date('d.m.Y H:i:s') . "</p>";
+        $html  = "<h2>{$icon} " . Craft::t('synmon', 'SynMon: Suite {status}', ['status' => $status]) . "</h2>";
+        $html .= "<p><strong>" . Craft::t('synmon', 'Suite') . ":</strong> " . htmlspecialchars($suite['name']) . "</p>";
+        $html .= "<p><strong>" . Craft::t('synmon', 'Status') . ":</strong> " . strtoupper($status) . "</p>";
+        $html .= "<p><strong>" . Craft::t('synmon', 'Run ID') . ":</strong> #{$runId}</p>";
+        $html .= "<p><strong>" . Craft::t('synmon', 'Time') . ":</strong> " . date('Y-m-d H:i:s') . "</p>";
 
         if ($failedStep) {
             $html .= "<hr>";
-            $html .= "<h3>Fehlgeschlagener Schritt</h3>";
-            $html .= "<p><strong>Typ:</strong> " . htmlspecialchars($failedStep['type']) . "</p>";
+            $html .= "<h3>" . Craft::t('synmon', 'Failed Step') . "</h3>";
+            $html .= "<p><strong>" . Craft::t('synmon', 'Type') . ":</strong> " . htmlspecialchars($failedStep['type']) . "</p>";
             if (!empty($failedStep['selector'])) {
                 $html .= "<p><strong>Selector:</strong> <code>" . htmlspecialchars($failedStep['selector']) . "</code></p>";
             }
             if (!empty($failedStep['value'])) {
-                $html .= "<p><strong>Value:</strong> <code>" . htmlspecialchars($failedStep['value']) . "</code></p>";
+                $html .= "<p><strong>" . Craft::t('synmon', 'Value') . ":</strong> <code>" . htmlspecialchars($failedStep['value']) . "</code></p>";
             }
             if (!empty($failedStep['description'])) {
-                $html .= "<p><strong>Beschreibung:</strong> " . htmlspecialchars($failedStep['description']) . "</p>";
+                $html .= "<p><strong>" . Craft::t('synmon', 'Description') . ":</strong> " . htmlspecialchars($failedStep['description']) . "</p>";
             }
         }
 

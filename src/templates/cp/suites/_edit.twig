@@ -7,7 +7,7 @@
 {% set selectedSubnavItem = 'suites' %}
 {% set crumbs = [
     { label: 'SynMon', url: cpUrl('synmon') },
-    { label: 'Test Suites', url: cpUrl('synmon/suites') },
+    { label: 'Test Suites'|t('synmon'), url: cpUrl('synmon/suites') },
 ] %}
 
 {% block content %}
@@ -19,23 +19,31 @@
     <div class="flex" style="gap:16px;flex-wrap:wrap">
         <div style="flex:1;min-width:280px">
             <div class="field">
-                <div class="heading"><label>Name *</label></div>
+                <div class="heading"><label>{{ 'Name'|t('synmon') }} *</label></div>
                 <div class="input"><input type="text" name="name" class="text fullwidth" required
-                    value="{{ suite.name ?? '' }}" placeholder="z.B. Homepage Check"></div>
+                    value="{{ suite.name ?? '' }}" placeholder="{{ 'e.g. Homepage Check'|t('synmon') }}"></div>
             </div>
             <div class="field">
-                <div class="heading"><label>Beschreibung</label></div>
+                <div class="heading"><label>{{ 'Description'|t('synmon') }}</label></div>
                 <div class="input"><input type="text" name="description" class="text fullwidth"
                     value="{{ suite.description ?? '' }}"></div>
             </div>
             <div class="field">
-                <div class="heading"><label>Zeitplan</label></div>
+                <div class="heading"><label>{{ 'Schedule'|t('synmon') }}</label></div>
 
-                {# Wochentage #}
+                {# Weekdays #}
                 <div style="margin-bottom:10px">
-                    <div style="font-size:12px;color:#666;margin-bottom:6px;font-weight:600">Wochentage</div>
+                    <div style="font-size:12px;color:#666;margin-bottom:6px;font-weight:600">{{ 'Weekdays'|t('synmon') }}</div>
                     <div style="display:flex;gap:6px;flex-wrap:wrap">
-                        {% set days = ['Mo','Di','Mi','Do','Fr','Sa','So'] %}
+                        {% set days = [
+                            'Mon'|t('synmon'),
+                            'Tue'|t('synmon'),
+                            'Wed'|t('synmon'),
+                            'Thu'|t('synmon'),
+                            'Fri'|t('synmon'),
+                            'Sat'|t('synmon'),
+                            'Sun'|t('synmon')
+                        ] %}
                         {% set cronDays = suite.cronExpression is defined ? suite.cronExpression : '' %}
                         {% for i, day in days %}
                             <label style="display:flex;align-items:center;gap:4px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:13px">
@@ -45,14 +53,14 @@
                         {% endfor %}
                         <label style="display:flex;align-items:center;gap:4px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:13px">
                             <input type="checkbox" id="cron-every-day" style="margin:0">
-                            Täglich
+                            {{ 'Daily'|t('synmon') }}
                         </label>
                     </div>
                 </div>
 
-                {# Feste Monatstage #}
+                {# Specific month days #}
                 <div style="margin-bottom:10px">
-                    <div style="font-size:12px;color:#666;margin-bottom:6px;font-weight:600">Feste Tage im Monat <small style="font-weight:400">(optional, kombinierbar mit Wochentagen)</small></div>
+                    <div style="font-size:12px;color:#666;margin-bottom:6px;font-weight:600">{{ 'Specific days of month (optional, combinable with weekdays)'|t('synmon') }}</div>
                     <div style="display:flex;gap:4px;flex-wrap:wrap">
                         {% for d in 1..31 %}
                             <label style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;font-size:12px">
@@ -63,25 +71,25 @@
                     </div>
                 </div>
 
-                {# Uhrzeiten #}
+                {# Times #}
                 <div style="margin-bottom:10px">
-                    <div style="font-size:12px;color:#666;margin-bottom:6px;font-weight:600">Uhrzeiten</div>
+                    <div style="font-size:12px;color:#666;margin-bottom:6px;font-weight:600">{{ 'Times'|t('synmon') }}</div>
                     <div id="cron-times-list" style="display:flex;flex-direction:column;gap:6px">
                         <div class="cron-time-entry" style="display:flex;gap:6px;align-items:center">
                             <input type="time" class="cron-time text" value="08:00" style="width:120px">
                             <button type="button" class="btn-remove-time btn small" style="padding:2px 8px">✕</button>
                         </div>
                     </div>
-                    <button type="button" id="btn-add-time" class="btn small" style="margin-top:8px">+ Uhrzeit hinzufügen</button>
+                    <button type="button" id="btn-add-time" class="btn small" style="margin-top:8px">+ {{ 'Add time'|t('synmon') }}</button>
                 </div>
 
                 {# Cron Preview #}
                 <div style="margin-bottom:4px">
-                    <div style="font-size:12px;color:#666;margin-bottom:4px;font-weight:600">Cron Expression (generiert)</div>
+                    <div style="font-size:12px;color:#666;margin-bottom:4px;font-weight:600">{{ 'Cron Expression (generated)'|t('synmon') }}</div>
                     <div style="display:flex;gap:8px;align-items:center">
                         <input type="text" name="cronExpression" id="cron-expression" class="text code fullwidth"
                             value="{{ suite.cronExpression ?? '0 8 * * *' }}" placeholder="0 8 * * *">
-                        <button type="button" id="btn-cron-advanced" class="btn small" title="Manuell bearbeiten">✏️</button>
+                        <button type="button" id="btn-cron-advanced" class="btn small" title="{{ 'Edit manually'|t('synmon') }}">✏️</button>
                     </div>
                     <div id="cron-preview-text" style="font-size:11px;color:#6b7280;margin-top:4px"></div>
                 </div>
@@ -90,18 +98,18 @@
             <div class="field">
                 <div class="heading"><label>
                     <input type="checkbox" name="enabled" value="1" {{ (suite is null or suite.enabled) ? 'checked' : '' }}>
-                    Aktiv
+                    {{ 'Active'|t('synmon') }}
                 </label></div>
             </div>
         </div>
         <div style="flex:1;min-width:280px">
             <div class="field">
-                <div class="heading"><label>Benachrichtigung: E-Mail</label></div>
+                <div class="heading"><label>{{ 'Notification: Email'|t('synmon') }}</label></div>
                 <div class="input"><input type="email" name="notifyEmail" class="text fullwidth"
                     value="{{ suite.notifyEmail ?? '' }}" placeholder="admin@example.com"></div>
             </div>
             <div class="field">
-                <div class="heading"><label>Webhook-URL</label></div>
+                <div class="heading"><label>{{ 'Webhook URL'|t('synmon') }}</label></div>
                 <div class="input"><input type="url" name="notifyWebhookUrl" class="text fullwidth"
                     value="{{ suite.notifyWebhookUrl ?? '' }}" placeholder="https://hooks.slack.com/..."></div>
             </div>
@@ -109,7 +117,7 @@
                 <div class="heading"><label>
                     <input type="checkbox" name="notifyOnSuccess" value="1"
                         {{ suite.notifyOnSuccess ?? false ? 'checked' : '' }}>
-                    Auch bei Erfolg benachrichtigen
+                    {{ 'Also notify on success'|t('synmon') }}
                 </label></div>
             </div>
         </div>
@@ -117,7 +125,7 @@
 
     <hr>
 
-    <h2>Test Steps</h2>
+    <h2>{{ 'Test Steps'|t('synmon') }}</h2>
 
     <div id="step-list">
         {% for i, step in steps %}
@@ -131,16 +139,16 @@
                 <option value="{{ typeKey }}">{{ typeConfig.label }}</option>
             {% endfor %}
         </select>
-        <button type="button" id="btn-add-step" class="btn">+ Step hinzufügen</button>
+        <button type="button" id="btn-add-step" class="btn">+ {{ 'Add Step'|t('synmon') }}</button>
     </div>
 
     <hr>
     <div style="display:flex;gap:10px">
-        <button type="submit" formaction="{{ cpUrl('synmon/suites/save') }}" class="btn submit">Speichern</button>
-        <a href="{{ cpUrl('synmon/suites') }}" class="btn">Abbrechen</a>
+        <button type="submit" formaction="{{ cpUrl('synmon/suites/save') }}" class="btn submit">{{ 'Save'|t('synmon') }}</button>
+        <a href="{{ cpUrl('synmon/suites') }}" class="btn">{{ 'Cancel'|t('synmon') }}</a>
         {% if suite %}
-            <button type="button" class="btn btn-run-suite" data-suite-id="{{ suite.id }}" style="margin-left:auto">▶ Jetzt testen</button>
-            <a href="{{ cpUrl('synmon/suites/' ~ suite.id ~ '/live') }}" class="btn" style="background:#1e293b;color:#fff;border-color:#1e293b">🎬 Live testen</a>
+            <button type="button" class="btn btn-run-suite" data-suite-id="{{ suite.id }}" style="margin-left:auto">▶ {{ 'Test now'|t('synmon') }}</button>
+            <a href="{{ cpUrl('synmon/suites/' ~ suite.id ~ '/live') }}" class="btn" style="background:#1e293b;color:#fff;border-color:#1e293b">🎬 {{ 'Live test'|t('synmon') }}</a>
         {% endif %}
     </div>
 </form>

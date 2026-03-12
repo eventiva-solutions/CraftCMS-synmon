@@ -1,5 +1,5 @@
 <div class="synmon-step-row" data-step-index="{{ index }}">
-    <span class="synmon-drag-handle" title="Verschieben">⠿</span>
+    <span class="synmon-drag-handle" title="{{ 'Move'|t('synmon') }}">⠿</span>
 
     <select name="steps[{{ index }}][type]" class="select step-type-select" style="min-width:160px">
         {% for typeKey, typeConfig in stepTypes %}
@@ -9,26 +9,26 @@
 
     <input type="text" name="steps[{{ index }}][selector]" class="text step-selector-input"
         value="{{ step.selector ?? '' }}"
-        placeholder="{{ stepTypes[step.type].selectorPlaceholder ?? 'CSS-Selector' }}"
+        placeholder="{{ stepTypes[step.type].selectorPlaceholder ?? 'CSS Selector'|t('synmon') }}"
         {{ stepTypes[step.type].hasSelector ?? true ? '' : 'style="display:none"' }}>
 
     <input type="text" name="steps[{{ index }}][value]" class="text step-value-input"
         value="{{ step.value ?? '' }}"
-        placeholder="{{ stepTypes[step.type].valuePlaceholder ?? 'Wert / URL' }}"
+        placeholder="{{ stepTypes[step.type].valuePlaceholder ?? 'Value / URL'|t('synmon') }}"
         {{ stepTypes[step.type].hasValue ?? true ? '' : 'style="display:none"' }}>
 
     <input type="text" name="steps[{{ index }}][description]" class="text"
-        value="{{ step.description ?? '' }}" placeholder="Beschreibung (optional)" style="min-width:140px">
+        value="{{ step.description ?? '' }}" placeholder="{{ 'Description (optional)'|t('synmon') }}" style="min-width:140px">
 
     <input type="number" name="steps[{{ index }}][timeout]" class="text"
-        value="{{ step.timeout ?? 30000 }}" style="width:90px" placeholder="Timeout ms">
+        value="{{ step.timeout ?? 30000 }}" style="width:90px" placeholder="{{ 'Timeout ms'|t('synmon') }}">
 
     <input type="hidden" name="steps[{{ index }}][sortOrder]" value="{{ index }}">
 
-    <button type="button" class="btn small btn-step-help" title="Hilfe anzeigen"
+    <button type="button" class="btn small btn-step-help" title="{{ 'Show help'|t('synmon') }}"
         style="background:none;border:1px solid #d1d5db;color:#6b7280;min-width:28px">?</button>
 
-    <button type="button" class="btn small btn-remove-step" title="Entfernen">✕</button>
+    <button type="button" class="btn small btn-remove-step" title="{{ 'Remove'|t('synmon') }}">✕</button>
 </div>
 <div class="synmon-step-hint" style="display:none;grid-column:2/-1;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:10px 14px;font-size:12px;color:#0c4a6e;line-height:1.6;margin:-4px 0 4px">
     {{ (stepTypes[step.type].hint ?? '')|raw }}
